@@ -10,6 +10,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.bookstore.web.BookController;
 
+
+/*
+ * 
+ * 	Application is running live at https://jazmcbookstore.herokuapp.com/
+ * 
+ */
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class BookstoreApplicationTests {
