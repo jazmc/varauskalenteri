@@ -64,7 +64,7 @@ span[contenteditable=true] {
 <body>
 	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]! Welcome to the Bookstore.</h1>
 	<form th:action="@{/logout}" method="post">
- <input type="submit" value="Sign Out"/>
+ <input type="submit" class="btn btn-danger" value="Sign Out"/>
 </form>
 	<table class="table table-striped">
 		<tr>
