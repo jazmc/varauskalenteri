@@ -30,10 +30,15 @@ public class BookRepositoryTests {
     }
     
     @Test
-    public void createBook() {
+    public void createAndDeleteBook() {
     	Book newbook = new Book("99999", "Valekirja", "Valekirjailija", "2021");
     	repository.save(newbook);
     	assertThat(newbook.getId()).isNotNull();
+    	List<Book> books = repository.findByTitle("Valekirja");
+        assertThat(books).hasSize(1);
+    	repository.deleteById(newbook.getId());
+    	List<Book> books2 = repository.findByTitle("Valekirja");
+        assertThat(books2).hasSize(0);
     }
      
 
