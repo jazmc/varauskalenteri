@@ -1,4 +1,4 @@
-package com.example.varauskalenteri;
+package com.example.bookstore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,38 +9,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.example.varauskalenteri.domain.Varaus;
-import com.example.varauskalenteri.domain.VarausRepository;
-
 import org.junit.jupiter.api.Test;
+
+import com.example.bookstore.domain.Book;
+import com.example.bookstore.domain.BookRepository;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class VarausRepositoryTests {
+public class BookRepositoryTests {
 
     @Autowired
-    private VarausRepository repository;
+    private BookRepository repository;
 
     @Test
-    public void etsiTestiVaraus() {
-        List<Varaus> varaus = repository.findByVaraaja("Testivaraaja");
+    public void findBookByAuthor() {
+        List<Book> books = repository.findByTitle("Muukalainen");
         
-        assertThat(varaus).hasSize(1);
-
+        assertThat(books).hasSize(1);
+        assertThat(books.get(0).getAuthor()).isEqualTo("Diana Gabaldon");
     }
-    /*
+    
     @Test
     public void createAndDeleteBook() {
-    	Varaus newbook = new Varaus("99999", "Valekirja", "Valekirjailija", "2021");
+    	Book newbook = new Book("99999", "Valekirja", "Valekirjailija", "2021");
     	repository.save(newbook);
     	assertThat(newbook.getId()).isNotNull();
-    	List<Varaus> varaus = repository.findByTitle("Valekirja");
-        assertThat(varaus).hasSize(1);
+    	List<Book> books = repository.findByTitle("Valekirja");
+        assertThat(books).hasSize(1);
     	repository.deleteById(newbook.getId());
-    	List<Varaus> books2 = repository.findByTitle("Valekirja");
+    	List<Book> books2 = repository.findByTitle("Valekirja");
         assertThat(books2).hasSize(0);
     }
-     */
+     
 
 }

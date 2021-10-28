@@ -59,16 +59,96 @@ span[contenteditable=true] {
 }
 </style>
 <head>
-<title>Varauskalenteri</title>
+<title>Server Programming</title>
 </head>
 <body>
-	<h1 th:inline="text">Morjensta [[${#httpServletRequest.remoteUser}]]! Tervetuloa varauskalenteriin.</h1>
+	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]! Welcome to the Bookstore.</h1>
 	<form th:action="@{/logout}" method="post">
  <input type="submit" class="btn btn-danger" value="Sign Out"/>
 </form>
 <br><br>
-<p>Tekstiä</p>
+	<table class="table table-striped">
+		<tr>
+			<th>ID</th>
+			<th>Title</th>
+			<th>ISBN</th>
+			<th>Author</th>
+			<th>Category</th>
+			<th>Year</th>
+			<th sec:authorize="hasAuthority('ADMIN')"></th>
+		</tr>
+		<!-- Iteroidaan kirjojen läpi -->
+		<tr th:each="book : ${books}">
+			<td><span th:text="${book.id}">1</span></td>
+			<td><span th:text="${book.title}"
+				th:id="@{'title' + ${book.id}}" contenteditable="false">1</span> <a
+				class="muokkaa" rel="title" th:name="${book.id}"><i
+					class="far fa-edit"></i></a></td>
+			<td><span th:text="${book.isbn}" th:id="@{'isbn' + ${book.id}}"
+				contenteditable="false">1</span> <a class="muokkaa" rel="isbn"
+				th:name="${book.id}"><i class="far fa-edit"></i></a></td>
+			<td><span th:text="${book.author}"
+				th:id="@{'author' + ${book.id}}" contenteditable="false">1</span> <a
+				class="muokkaa" rel="author" th:name="${book.id}"><i
+					class="far fa-edit"></i></a></td>
 
+			<td><select th:id="@{'catlist' + ${book.id}}"
+				class="form-control" style="display: none;">
+					<option value="" disabled="disabled" selected="selected">Choose
+						category...</option>
+					<option th:each="category: ${categories}"
+						th:value="${category.categoryid}" th:text="${category.name}"></option>
+			</select><span th:text="${book.category.name}"
+				th:id="@{'category' + ${book.id}}">1</span> <a
+				class="muokkaa spessu" rel="category" th:name="${book.id}"><i
+					class="far fa-edit"></i></a></td>
+
+			<td><span th:text="${book.year}" th:id="@{'year' + ${book.id}}"
+				contenteditable="false">1</span> <a class="muokkaa" rel="year"
+				th:name="${book.id}"><i class="far fa-edit"></i></a></td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a class="poista" th:href="@{'/delete/' + ${book.id}}">&#215;</a></td>
+		</tr>
+	</table>
+
+	<!-- lähetetään lomake /add sivulle post-metodilla -->
+	<h2>Add book</h2>
+	<form th:action="@{/add}" method="post">
+		<table>
+			<tr>
+				<td>Title:</td>
+				<td><input class="form-control" type="text" name="title"
+					required /></td>
+			</tr>
+			<tr>
+				<td>ISBN:</td>
+				<td><input class="form-control" type="text" name="isbn"
+					required /></td>
+			</tr>
+			<tr>
+				<td>Author:</td>
+				<td><input class="form-control" type="text" name="author"
+					required /></td>
+			</tr>
+			<tr>
+				<td>Category:</td>
+				<td><select id="catlist" class="form-control" name="cat">
+						<option value="" disabled="disabled" selected="selected">Choose
+							category...</option>
+						<option th:each="category: ${categories}"
+							th:value="${category.categoryid}" th:text="${category.name}"></option>
+				</select></td>
+			</tr>
+			<tr>
+				<td>Year:</td>
+				<td><input class="form-control" type="text" name="year"
+					required /></td>
+			</tr>
+		</table>
+		<p>
+			<input type="submit" value="Add a book" class="btn btn-success" />
+		</p>
+		
+	</form>
 
 	<script>
 		$('.muokkaa').not('.spessu').click(

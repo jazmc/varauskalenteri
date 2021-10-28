@@ -1,4 +1,4 @@
-package com.example.varauskalenteri.domain;
+package com.example.bookstore.domain;
 
 import org.springframework.data.repository.CrudRepository;
 

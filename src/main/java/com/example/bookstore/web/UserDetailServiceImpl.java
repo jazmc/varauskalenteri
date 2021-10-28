@@ -1,4 +1,4 @@
-package com.example.varauskalenteri.web;
+package com.example.bookstore.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.varauskalenteri.domain.User;
-import com.example.varauskalenteri.domain.UserRepository;
+import com.example.bookstore.domain.User;
+import com.example.bookstore.domain.UserRepository;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {

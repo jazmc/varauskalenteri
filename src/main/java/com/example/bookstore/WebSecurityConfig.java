@@ -1,4 +1,4 @@
-package com.example.varauskalenteri;
+package com.example.bookstore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import com.example.varauskalenteri.web.UserDetailServiceImpl;
+import com.example.bookstore.web.UserDetailServiceImpl;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
