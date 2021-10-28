@@ -1,4 +1,4 @@
-package com.example.bookstore.domain;
+package com.example.varauskalenteri.domain;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Category {
+public class Kategoria {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long categoryid;
@@ -20,20 +20,20 @@ public class Category {
 	
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-	private List<Book> books;
+	private List<Varaus> varaus;
 
-	public List<Book> getBooks() {
-		return books;
+	public List<Varaus> getBooks() {
+		return varaus;
 	}
 
-	public void setBooks(List<Book> books) {
-		this.books = books;
+	public void setBooks(List<Varaus> varaus) {
+		this.varaus = varaus;
 	}
 
-	public Category() {
+	public Kategoria() {
 	}
 
-	public Category(String name) {
+	public Kategoria(String name) {
 		super();
 		this.name = name;
 	}
