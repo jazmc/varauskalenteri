@@ -36,17 +36,13 @@ public class VarauskalenteriApplication {
 			urep.save(user1);
 			urep.save(user2);
 			
-			Kategoria a = new Kategoria("Fantasy");
-			Kategoria b = new Kategoria("Historical fantasy");
-			Kategoria c = new Kategoria("Comedy");
-			Kategoria d = new Kategoria("Drama");
-
+			Kategoria a = new Kategoria("Lentovaraus");
+			Kategoria b = new Kategoria("Huolto");
+			
 			catrep.save(a);
 			catrep.save(b);
-			catrep.save(c);
-			catrep.save(d);
 
-			Varaus h = new Varaus("12345", "Harry Potter ja Viisasten kivi", "J.K. Rowling", "2002", a);
+			Varaus h = new Varaus("alku", "loppu", "varaaja", "selitys", a);
 			Varaus m = new Varaus("23456", "Muukalainen", "Diana Gabaldon", "2000", b);
 
 			repository.save(h);
