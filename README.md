@@ -1,5 +1,5 @@
-# bookstore
-Palvelinohjelmointi 2021
+# varauskalenteri
+Palvelinohjelmointi 2021 harjoitustyö
 -------
 
-Sovellus pyörii livenä osoitteessa https://jazmcbookstore.herokuapp.com
+Sovellus pyörii livenä osoitteessa https://varauskalenteri.herokuapp.com
