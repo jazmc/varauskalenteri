@@ -19,7 +19,7 @@ public class Kategoria {
 	private String name;
 	
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "kategoria")
 	private List<Varaus> varaus;
 
 	public List<Varaus> getBooks() {
