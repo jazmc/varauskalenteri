@@ -54,13 +54,13 @@
 						th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.month(kkeka)} + '.'}"></div>
 				</td>
 				<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'"><div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}"
-						th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}"><th:block th:each="varaus: ${varaukset}"><div th:attr="rel=${varaus.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+						th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}"><th:block th:each="varaus: ${varaukset}"><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 								th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
 								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
-								th:style="${#temporals.format(varaus.alku, 'mm') eq '30'} ? 'margin-left:50%;width:calc('+${varaus.kesto}+' * (100% + 1px));' : 'width:calc('+${varaus.kesto}+' * (100% + 1px));'"></div><div th:attr="rel=${varaus.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:style="${#temporals.format(varaus.alku, 'mm') eq '30'} ? 'margin-left:50%;width:calc('+${varaus.kesto}+' * (100% + 1px));' : 'width:calc('+${varaus.kesto}+' * (100% + 1px));'"></div><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 								th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) > i and j == 0}"
 								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (jatkuu) ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (jatkuu)'}"
-								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); border-top-left-radius:0; border-bottom-left-radius:0;'"></div><div th:attr="rel=${varaus.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); border-top-left-radius:0; border-bottom-left-radius:0;'"></div><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 								th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) == i and #numbers.formatInteger(j,2) eq #temporals.format(varaus.loppu, 'HH')}"
 								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (päättyy)' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (päättyy)'}"
 								th:style="${#temporals.format(varaus.loppu, 'mm') eq '30'} ? 'margin-right:-50%;width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:100%; text-align:right;' : 'width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:100%; text-align:right;'"></div></th:block></div></td>
@@ -70,8 +70,13 @@
 	<footer>webdesign &copy; Jasmin Lumme</footer>
 
 	<script>
-		$('.lentovaraus').css('background-color', 'hotpink');
-		$('.huolto').css('background-color', 'yellowgreen');
+		$('.huolto').css('background-color', '#baa29d');
+		
+		$('.lentovaraus').each(function(){
+			var varijono = ['#A8FFF6', '#DAB5FF', '#ffb593', '#b3f0c8', '#FFE1B5', '#FFC4A8', '#DAB5FF', '#8FFFF4', '#9CFFBD'];
+			var varaajanid = $(this).attr("data-varaaja");
+			$(this).css('background-color', varijono[varaajanid]);
+		});
 		
 		$('.lentovaraus, .huolto').mouseover(function() {
 			var varauksenid = $(this).attr("rel");
