@@ -1,5 +1,10 @@
 package com.example.varauskalenteri.web;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +30,8 @@ public class VarausController {
 	@Autowired
 	private KategoriaRepository catrep;
 	
+	private String[] paivamuunnos = {"Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai"};
+	
     @RequestMapping(value="/login")
     public String login() {	
         return "kirjaudu";
@@ -36,13 +43,22 @@ public class VarausController {
 		// lisätään varaukset modeliin
 		model.addAttribute("varaukset", repository.findAll());
 		model.addAttribute("kategoriat", catrep.findAll());
+		Calendar cal = Calendar.getInstance();
+		int vikapv = cal.getActualMaximum(Calendar.DATE);
+		model.addAttribute("vikapv", vikapv);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		
+		LocalDate nyt = LocalDate.now();
+		LocalDate kkeka = nyt.with(TemporalAdjusters.firstDayOfMonth());
+		model.addAttribute("kkeka", kkeka);
+		model.addAttribute("paivamuunnos", paivamuunnos);
 		// return .html
 		return "varauskalenteri";
 	}
 
 	// lisäyslomake /add
 	@PostMapping("/add")
-	public String postVaraus(String alku, String loppu, String varaaja, String selitys, String cat) {
+	public String postVaraus(LocalDateTime alku, LocalDateTime loppu, String varaaja, String selitys, String cat) {
 		// luodaan olio parametreinä saaduista string-muuttujista
 		Optional<Kategoria> katsu = catrep.findById(Long.parseLong(cat));
 		Kategoria uusiKatsu = katsu.get();
@@ -61,17 +77,21 @@ public class VarausController {
 		Optional<Varaus> paivitettava = repository.findById(iidee);
 		Varaus paivitettavaVaraus = paivitettava.get();
 		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		
 		switch(thing) {
 			case "kategoria":
 				Optional<Kategoria> katsu = catrep.findById(Long.parseLong(val));
 				Kategoria uusiKatsu = katsu.get();
-				paivitettavaVaraus.setCategory(uusiKatsu);
+				paivitettavaVaraus.setKategoria(uusiKatsu);
 				break;
 			case "alku":
-				paivitettavaVaraus.setAlku(val);
+				LocalDateTime dateTime = LocalDateTime.parse(val, formatter);
+				paivitettavaVaraus.setAlku(dateTime);
 				break;
 			case "loppu":
-				paivitettavaVaraus.setLoppu(val);
+				LocalDateTime dateTime2 = LocalDateTime.parse(val, formatter);
+				paivitettavaVaraus.setLoppu(dateTime2);
 				break;
 			case "varaaja":
 				paivitettavaVaraus.setVaraaja(val);

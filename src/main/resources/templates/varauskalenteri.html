@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <!-- CSS only -->
 <link
@@ -8,17 +9,21 @@
 	rel="stylesheet"
 	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
 	crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap" rel="stylesheet">
 <script src="https://kit.fontawesome.com/7e7cff31ed.js"
 	crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 
 <style>
 td {
-	padding: .5em;
+	padding: 0;
+	position: relative;
 }
 
 body {
-	width: 80%;
+	width: 100%;
 	margin: 0 auto;
 	background-color: snow;
 }
@@ -57,20 +62,150 @@ span[contenteditable=true] {
 	padding: 0 1em;
 	border: 1px dashed #ffbb19;
 }
+
+.varauspohja {
+	width: 150%;
+	font-family: 'Anonymous Pro', monospace;
+}
+
+.varauspohja tr:first-child td {
+	background-color: #F28F3B;
+	padding: .5em 0;
+	font-weight:bold;
+}
+.varauspohja tr:first-child td div {
+	border-right:1px solid #C8553D;
+	padding-left:.3em;
+}
+
+.varauspohja tr:first-child {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+}
+
+.parillinen {
+	background-color: rgba(255, 213, 194, .2);
+}
+
+.varauspohja td:not(.stay) {
+	z-index: -1;
+	min-height: 2em;
+}
+
+.flex {
+	display: flex;
+	flex-wrap: nowrap;
+	overflow:hidden;
+}
+
+.flex div {
+	display: inline-block;
+	flex: 1 1 4%;
+}
+
+.pvanro {
+	float: right;
+}
+
+.stay {
+	position: sticky;
+	left: 0;
+	background-color: #588B8B;
+}
+
+.stay th {
+	left: 0;
+	position: sticky;
+	z-index: 3;
+	background-color: #588B8B;
+	padding: .5em;
+	width: 10%;
+}
+
+.sunnuntai td:last-child {
+	border-bottom: 2px solid #FFD5C2;
+}
+
+.tunti {
+	position: relative;
+	border-right:1px solid lightgray;
+}
+
+.lentovaraus, .huolto {
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:5;
+	border-radius:.3em;
+	line-height:2em;
+	padding:0 .5em;
+}
 </style>
 <head>
 <title>Varauskalenteri</title>
 </head>
 <body>
-	<h1 th:inline="text">Morjensta [[${#httpServletRequest.remoteUser}]]! Tervetuloa varauskalenteriin.</h1>
+	<h1 th:inline="text">Morjensta
+		[[${#httpServletRequest.remoteUser}]]! Tervetuloa varauskalenteriin.</h1>
 	<form th:action="@{/logout}" method="post">
- <input type="submit" class="btn btn-danger" value="Sign Out"/>
-</form>
-<br><br>
-<p>Tekstiä</p>
+		<input type="submit" class="btn btn-danger" value="Sign Out" />
+	</form>
+	<br>
+	<br>
+	<p th:text="${#dates.format(#dates.createNow(),'YYYY/MM/dd HH:mm')}">Tekstiä</p>
 
+	<table>
+		<tr th:each="varaus: ${varaukset}">
+			<td th:text="${varaus.id}">ID</td>
+			<td th:text="${#temporals.format(varaus.alku, 'dd.MM.yyyy HH:mm')}">Alku</td>
+			<td th:text="${#temporals.format(varaus.loppu, 'dd.MM.yyyy HH:mm')}">Loppu</td>
+			<td th:text="${varaus.varaaja}">Varaaja</td>
+			<td th:text="${varaus.selitys}">Selitys</td>
+			<td th:text="${varaus.kategoria.name}">Kategoria</td>
+		</tr>
+	</table>
+	<br>
+	<br>
+	<table class="varauspohja">
+		<tr class="stay">
+			<th>Päivä</th>
+			<td class="flex">
+				<div th:each="i : ${#numbers.sequence(0, 23, 1)}"
+					th:text="${#numbers.formatInteger(i,2)}"></div>
+			</td>
+		</tr>
+		<tr th:each="i : ${#numbers.sequence(1, vikapv, 1)}"
+			th:class="${#temporals.dayOfWeek(kkeka.plusDays(i-1))==7} ? 'sunnuntai'">
+			<td class="stay"
+				th:switch="${#temporals.dayOfWeek(kkeka.plusDays(i-1))}"><span
+				th:case="1">Maanantai</span> <span th:case="2">Tiistai</span> <span
+				th:case="3">Keskiviikko</span> <span th:case="4">Torstai</span> <span
+				th:case="5">Perjantai</span> <span th:case="6">Lauantai</span> <span
+				th:case="7">Sunnuntai</span>
+				<div class="pvanro"
+					th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.month(kkeka)} + '.'}"></div>
+			</td>
+			<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'">
+				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}">
+					<th:block th:each="varaus: ${varaukset}">
+						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+							th:if="${#numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
+							th:text="${varaus.varaaja}"
+							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'">Varaus</div>
+
+					</th:block>
+				</div>
+			</td>
+		</tr>
+	</table>
 
 	<script>
+		$('.lentovaraus').css('background-color', 'hotpink');
+		$('.huolto').css('background-color', 'yellowgreen');
+
 		$('.muokkaa').not('.spessu').click(
 				function() {
 					var asia = $(this).attr('rel');

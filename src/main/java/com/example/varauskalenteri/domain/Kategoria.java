@@ -22,11 +22,11 @@ public class Kategoria {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "kategoria")
 	private List<Varaus> varaus;
 
-	public List<Varaus> getBooks() {
+	public List<Varaus> getVaraukset() {
 		return varaus;
 	}
 
-	public void setBooks(List<Varaus> varaus) {
+	public void setVaraukset(List<Varaus> varaus) {
 		this.varaus = varaus;
 	}
 

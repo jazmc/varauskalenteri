@@ -1,5 +1,8 @@
 package com.example.varauskalenteri;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.boot.CommandLineRunner;
 
 import org.springframework.boot.SpringApplication;
@@ -41,12 +44,17 @@ public class VarauskalenteriApplication {
 			
 			catrep.save(a);
 			catrep.save(b);
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-			Varaus h = new Varaus("alku", "loppu", "varaaja", "selitys", a);
-			Varaus m = new Varaus("23456", "Muukalainen", "Diana Gabaldon", "2000", b);
-
+			Varaus h = new Varaus(LocalDateTime.parse("2021-11-20 12:30", formatter), LocalDateTime.parse("2021-11-20 15:30", formatter), "varaaja", "selitys", a);
+			Varaus m = new Varaus(LocalDateTime.parse("2021-11-22 16:00", formatter), LocalDateTime.parse("2021-11-22 19:30", formatter), "varaaja", "selitys", b);
+			Varaus n = new Varaus(LocalDateTime.parse("2021-11-15 07:30", formatter), LocalDateTime.parse("2021-11-15 12:30", formatter), "aamuvirkku", "selitys", a);
+			
+			
 			repository.save(h);
 			repository.save(m);
+			repository.save(n);
 
 		};
 	}
