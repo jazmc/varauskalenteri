@@ -208,7 +208,7 @@ tr td.stay, tr.stay th {
 				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}" th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}">
 					<th:block th:each="varaus: ${varaukset}">
 						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
-							th:if="${#numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
+							th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
 							th:text="${varaus.varaaja}"
 							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'">Varaus</div>
 

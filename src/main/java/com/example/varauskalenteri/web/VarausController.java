@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.varauskalenteri.domain.Varaus;
@@ -30,8 +31,6 @@ public class VarausController {
 	@Autowired
 	private KategoriaRepository catrep;
 	
-	private String[] paivamuunnos = {"Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai"};
-	
     @RequestMapping(value="/login")
     public String login() {	
         return "kirjaudu";
@@ -39,22 +38,43 @@ public class VarausController {
 
 	// perussivu
 	@RequestMapping(value={"/index", "/varauskalenteri"})
-	public String varausList(Model model) {
-		// lisätään varaukset modeliin
+	public String varausList(Model model, @RequestParam(value = "kk", required = false) String kk) {
+		// tehdään aina:
 		model.addAttribute("varaukset", repository.findAll());
 		model.addAttribute("kategoriat", catrep.findAll());
-		Calendar cal = Calendar.getInstance();
-		int vikapv = cal.getActualMaximum(Calendar.DATE);
-		model.addAttribute("vikapv", vikapv);
-		cal.set(Calendar.DAY_OF_MONTH, 1);
 		
-		LocalDate nyt = LocalDate.now();
-		LocalDate kkeka = nyt.with(TemporalAdjusters.firstDayOfMonth());
+		LocalDate kkeka;
+		int vikapv;
+		
+		if (kk == null) { // jos kuukautta ei oo annettu
+			Calendar cal = Calendar.getInstance();
+			vikapv = cal.getActualMaximum(Calendar.DATE);
+			model.addAttribute("vikapv", vikapv);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			
+			LocalDate nyt = LocalDate.now();
+			kkeka = nyt.with(TemporalAdjusters.firstDayOfMonth());
+			model.addAttribute("kkeka", kkeka);
+
+		} else {
+			Calendar cal = Calendar.getInstance();
+			int kuukausi = Integer.parseInt(kk);
+			cal.set(Calendar.MONTH, kuukausi-1);
+			
+			vikapv = cal.getActualMaximum(Calendar.DATE);
+			model.addAttribute("vikapv", vikapv);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			
+			int haluttuvuosi = cal.get(Calendar.YEAR);
+			
+			kkeka = LocalDate.of(haluttuvuosi, kuukausi, 1);
+			
+		}
 		model.addAttribute("kkeka", kkeka);
-		model.addAttribute("paivamuunnos", paivamuunnos);
 		// return .html
 		return "varauskalenteri";
 	}
+	
 
 	// lisäyslomake /add
 	@PostMapping("/add")
