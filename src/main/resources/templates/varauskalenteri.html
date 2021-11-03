@@ -28,7 +28,7 @@ body {
 	width: 100%;
 	margin: 0 auto;
 	background-color: snow;
-	position:relative;
+	position: relative;
 }
 
 .poista {
@@ -93,6 +93,15 @@ span[contenteditable=true] {
 	background-color: rgba(255, 213, 194, .2);
 }
 
+#tanaan td:first-child {
+	font-weight: bold;
+	background-color: #739d9d;
+}
+
+#tanaan td:last-child {
+	background-color: rgba(88, 139, 139, .2);
+}
+
 .varauspohja td:not(.stay) {
 	min-height: 2em;
 }
@@ -117,7 +126,7 @@ span[contenteditable=true] {
 	left: 0;
 	background-color: #588B8B;
 	text-transform: uppercase;
-	z-index:2;
+	z-index: 2;
 }
 
 tr td.stay, tr.stay th {
@@ -194,7 +203,8 @@ tr td.stay, tr.stay th {
 			</td>
 		</tr>
 		<tr th:each="i : ${#numbers.sequence(1, vikapv, 1)}"
-			th:class="${#temporals.dayOfWeek(kkeka.plusDays(i-1))==7} ? 'sunnuntai'">
+			th:class="${#temporals.dayOfWeek(kkeka.plusDays(i-1))==7} ? 'sunnuntai'"
+			th:id="${#dates.format(#dates.createNow(),'YYYY') eq #temporals.format(kkeka, 'YYYY') and #dates.format(#dates.createNow(),'MM') eq #temporals.format(kkeka, 'MM') and #dates.format(#dates.createNow(),'dd') eq #numbers.formatInteger(i,2)} ? 'tanaan'">
 			<td class="stay"
 				th:switch="${#temporals.dayOfWeek(kkeka.plusDays(i-1))}"><span
 				th:case="1">Maanantai</span> <span th:case="2">Tiistai</span> <span
@@ -205,7 +215,8 @@ tr td.stay, tr.stay th {
 					th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.month(kkeka)} + '.'}"></div>
 			</td>
 			<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'">
-				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}" th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}">
+				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}"
+					th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}">
 					<th:block th:each="varaus: ${varaukset}">
 						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 							th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
@@ -221,9 +232,9 @@ tr td.stay, tr.stay th {
 	<script>
 		$('.lentovaraus').css('background-color', 'hotpink');
 		$('.huolto').css('background-color', 'yellowgreen');
-		
-		$('.lentovaraus, .huolto').click(function(){
-			
+
+		$('.lentovaraus, .huolto').click(function() {
+
 			alert("osuit");
 		});
 
