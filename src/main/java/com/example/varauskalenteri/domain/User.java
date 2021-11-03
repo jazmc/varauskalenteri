@@ -21,19 +21,27 @@ public class User {
 	private String passwordHash;
 	@Column(name = "email", nullable = false)
 	private String email;
+	@Column(name = "etunimi", nullable = false)
+	private String etunimi;
+	@Column(name = "sukunimi", nullable = false)
+	private String sukunimi;
+	
 	@Column(name = "role", nullable = false)
 	private String role;
 	
     public User() {
     }
 
-	public User(String username, String passwordHash, String email, String role) {
+	public User(String username, String etunimi, String sukunimi, String passwordHash, String email, String role) {
 		super();
 		this.username = username;
+		this.etunimi = etunimi;
+		this.sukunimi = sukunimi;
 		this.passwordHash = passwordHash;
 		this.email = email;
 		this.role = role;
 	}
+
 	public Long getId() {
 		return id;
 	}
@@ -58,5 +66,27 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEtunimi() {
+		return etunimi;
+	}
+
+	public void setEtunimi(String etunimi) {
+		this.etunimi = etunimi;
+	}
+
+	public String getSukunimi() {
+		return sukunimi;
+	}
+
+	public void setSukunimi(String sukunimi) {
+		this.sukunimi = sukunimi;
+	}
 }

@@ -30,6 +30,19 @@ public class Varaus {
 	@JsonManagedReference
 	private Kategoria kategoria;
 	
+	@ManyToOne
+	@JoinColumn(name = "usersid")
+	@JsonManagedReference
+	private User user;
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Kategoria getKategoria() {
 		return kategoria;
 	}

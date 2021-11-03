@@ -152,11 +152,12 @@ tr td.stay, tr.stay th {
 }
 
 .lentovaraus, .huolto {
-	height: 100%;
+	height: calc(100% - 2px);
 	position: absolute;
 	top: 0;
 	left: 0;
 	overflow: hidden;
+	margin-top:1px;
 	z-index: 1;
 	border-radius: .3em;
 	line-height: 2em;
@@ -190,6 +191,7 @@ tr td.stay, tr.stay th {
 			<td th:text="${varaus.varaaja}">Varaaja</td>
 			<td th:text="${varaus.selitys}">Selitys</td>
 			<td th:text="${varaus.kategoria.name}">Kategoria</td>
+			<td th:text="${varaus.user.username}">Käyttäjä</td>
 		</tr>
 	</table>
 	<br>
@@ -220,8 +222,18 @@ tr td.stay, tr.stay th {
 					<th:block th:each="varaus: ${varaukset}">
 						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 							th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
-							th:text="${varaus.varaaja}"
+							th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
 							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'">Varaus</div>
+							
+						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+							th:if="${#temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) > i and j == 0}"
+							th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (jatkuu) ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (jatkuu)'}"
+							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'">Varaus</div>
+							
+						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+							th:if="${#temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) == i and #numbers.formatInteger(j,2) eq #temporals.format(varaus.loppu, 'HH')}"
+							th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
+							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:0;'">Varaus</div>
 
 					</th:block>
 				</div>
