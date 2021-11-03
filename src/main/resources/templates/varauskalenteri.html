@@ -11,191 +11,27 @@
 	crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&family=Patrick+Hand+SC&display=swap" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="css/css.css" th:href="@{css/css.css}" />
 <script src="https://kit.fontawesome.com/7e7cff31ed.js"
 	crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 
-<style>
-td {
-	padding: 0;
-	position: relative;
-}
-
-body {
-	width: 100%;
-	margin: 0 auto;
-	background-color: snow;
-	position: relative;
-}
-
-.poista {
-	display: inline-block;
-	background-color: red;
-	color: #fff;
-	border-radius: 1em;
-	padding: 0 .3em;
-	text-decoration: none;
-	min-width: 2em;
-	text-align: center;
-}
-
-.muokkaa {
-	display: inline-block;
-	background-color: green;
-	color: #fff;
-	border-radius: 1em;
-	padding: 0 .3em;
-	text-decoration: none;
-	min-width: 2em;
-	text-align: center;
-}
-
-.muokkaa:hover, .poista:hover {
-	color: #fff;
-	cursor: pointer;
-}
-
-span[contenteditable=true] {
-	font-family: monospace;
-	background: #fff3a4;
-	border-radius: 1em;
-	padding: 0 1em;
-	border: 1px dashed #ffbb19;
-}
-
-.varauspohja {
-	width: 150%;
-	font-family: 'Anonymous Pro', monospace;
-}
-
-.varauspohja tr:first-child td {
-	background-color: #F28F3B;
-	padding: .5em 0;
-	font-weight: bold;
-}
-
-.varauspohja tr:first-child td div {
-	border-right: 1px solid #C8553D;
-	padding-left: .3em;
-}
-
-.varauspohja tr:first-child {
-	position: sticky;
-	top: 0;
-	z-index: 3;
-	box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-}
-
-.parillinen {
-	background-color: rgba(255, 213, 194, .2);
-}
-
-#tanaan td:first-child {
-	font-weight: bold;
-	background-color: #739d9d;
-}
-
-#tanaan td:last-child {
-	background-color: rgba(88, 139, 139, .2);
-}
-
-.varauspohja td:not(.stay) {
-	min-height: 2em;
-}
-
-.flex {
-	display: flex;
-	flex-wrap: nowrap;
-	overflow: hidden;
-}
-
-.flex div {
-	display: inline-block;
-	flex: 1 1 4%;
-}
-
-.pvanro {
-	float: right;
-}
-
-.stay {
-	position: sticky;
-	left: 0;
-	background-color: #588B8B;
-	text-transform: uppercase;
-	z-index: 2;
-}
-
-tr td.stay, tr.stay th {
-	color: #fff;
-}
-
-.stay th {
-	left: 0;
-	position: sticky;
-	z-index: 3;
-	background-color: #588B8B;
-	padding: .5em;
-	width: 10%;
-}
-
-.sunnuntai {
-	border-bottom: 2px solid #739d9d;
-}
-
-.tunti {
-	position: relative;
-	border-right: 1px solid lightgray;
-}
-
-.lentovaraus, .huolto {
-	height: calc(100% - 2px);
-	position: absolute;
-	top: 0;
-	left: 0;
-	overflow: hidden;
-	margin-top: 1px; z-index : 1;
-	border-radius: .3em;
-	line-height: 2em;
-	padding: 0 .5em;
-	opacity: .9;
-	z-index: 1;
-}
-
-.lentovaraus:hover, .huolto:hover {
-	opacity: 1;
-	cursor: pointer;
-}
-</style>
 <head>
 <title>Varauskalenteri</title>
 </head>
 <body>
-	<h1 th:inline="text">Morjensta
-		[[${#httpServletRequest.remoteUser}]]! Tervetuloa varauskalenteriin.</h1>
+	<div class="ylaosa">
+	<h1 th:inline="text">LENTOVARAUSKALENTERI</h1>
 	<form th:action="@{/logout}" method="post">
 		<input type="submit" class="btn btn-danger" value="Sign Out" />
 	</form>
 	<br>
 	<br>
 	<p th:text="${#dates.format(#dates.createNow(),'YYYY/MM/dd HH:mm')}">Tekstiä</p>
-	
-	<table>
-		<tr th:each="varaus: ${varaukset}">
-			<td th:text="${varaus.id}">ID</td>
-			<td th:text="${#temporals.format(varaus.alku, 'dd.MM.yyyy HH:mm')}">Alku</td>
-			<td th:text="${#temporals.format(varaus.loppu, 'dd.MM.yyyy HH:mm')}">Loppu</td>
-			<td th:text="${varaus.varaaja}">Varaaja</td>
-			<td th:text="${varaus.selitys}">Selitys</td>
-			<td th:text="${varaus.kategoria.name}">Kategoria</td>
-			<td th:text="${varaus.user.username}">Käyttäjä</td>
-		</tr>
-	</table>
-	<br>
-	<br>
+
+	</div>
+
 	<div class="kalenteripohja">
 		<table class="varauspohja">
 			<tr class="stay">
@@ -231,6 +67,7 @@ tr td.stay, tr.stay th {
 			</tr>
 		</table>
 	</div>
+	<footer>webdesign &copy; Jasmin Lumme</footer>
 
 	<script>
 		$('.lentovaraus').css('background-color', 'hotpink');

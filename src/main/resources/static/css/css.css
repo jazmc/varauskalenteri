@@ -1,0 +1,185 @@
+@charset "UTF-8";
+
+@font-face { 
+    font-family: 'Graced Script'; 
+    src: url('GracedScript.ttf') format('truetype');
+}
+
+td {
+	padding: 0;
+	position: relative;
+}
+
+body {
+	width: 100%;
+	margin: 0 auto;
+	background-color: #C8553D;
+	position: relative;
+}
+
+h1 {
+	font-family: 'Patrick Hand SC', cursive;
+	font-size:3.5rem;
+	color:#FFD5C2;
+}
+
+.poista {
+	display: inline-block;
+	background-color: red;
+	color: #fff;
+	border-radius: 1em;
+	padding: 0 .3em;
+	text-decoration: none;
+	min-width: 2em;
+	text-align: center;
+}
+
+.muokkaa {
+	display: inline-block;
+	background-color: green;
+	color: #fff;
+	border-radius: 1em;
+	padding: 0 .3em;
+	text-decoration: none;
+	min-width: 2em;
+	text-align: center;
+}
+
+.muokkaa:hover, .poista:hover {
+	color: #fff;
+	cursor: pointer;
+}
+
+span[contenteditable=true] {
+	font-family: monospace;
+	background: #fff3a4;
+	border-radius: 1em;
+	padding: 0 1em;
+	border: 1px dashed #ffbb19;
+}
+
+.varauspohja {
+	width: 150%;
+	font-family: 'Anonymous Pro', monospace;
+	background-color:snow;
+}
+
+.varauspohja tr:first-child td {
+	background-color: #F28F3B;
+	padding: .5em 0;
+	font-weight: bold;
+}
+
+.varauspohja tr:first-child td div {
+	border-right: 1px solid #C8553D;
+	padding-left: .3em;
+}
+
+.varauspohja tr:first-child {
+	position: sticky;
+	top: 0;
+	z-index: 3;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+}
+
+.parillinen {
+	background-color: rgba(255, 213, 194, .2);
+}
+
+#tanaan td:first-child {
+	font-weight: bold;
+	background-color: #739d9d;
+}
+
+#tanaan td:last-child {
+	background-color: rgba(88, 139, 139, .2);
+}
+
+.varauspohja td:not(.stay) {
+	min-height: 2em;
+}
+
+.flex {
+	display: flex;
+	flex-wrap: nowrap;
+	overflow: hidden;
+}
+
+.flex div {
+	display: inline-block;
+	flex: 1 1 4%;
+}
+
+.pvanro {
+	float: right;
+}
+
+.stay {
+	position: sticky;
+	left: 0;
+	background-color: #588B8B;
+	text-transform: uppercase;
+	z-index: 2;
+}
+
+tr td.stay, tr.stay th {
+	color: #fff;
+}
+
+.stay th {
+	left: 0;
+	position: sticky;
+	z-index: 3;
+	background-color: #588B8B;
+	padding: .5em;
+	width: 10%;
+}
+
+.sunnuntai {
+	border-bottom: 2px solid #739d9d;
+}
+
+.tunti {
+	position: relative;
+	border-right: 1px solid lightgray;
+}
+
+.lentovaraus, .huolto {
+	height: calc(100% - 2px);
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	margin-top: 1px; z-index : 1;
+	border-radius: .3em;
+	line-height: 2em;
+	padding: 0 .5em;
+	opacity: .9;
+	z-index: 1;
+}
+
+.lentovaraus:hover, .huolto:hover {
+	opacity: 1;
+	cursor: pointer;
+}
+
+.kalenteripohja {
+	margin-top:20vh;
+	box-shadow:0 0 10px rgba(0,0,0,.3);
+}
+
+.ylaosa {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	z-index:-1;
+	text-align:center;
+}
+
+footer {
+	padding:.5em;
+	text-align:center;
+	font-family: 'Graced Script', cursive;
+	color: rgba(255,255,255,.4);
+}
