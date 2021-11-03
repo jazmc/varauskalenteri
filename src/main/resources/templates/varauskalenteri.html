@@ -72,6 +72,16 @@
 	<script>
 		$('.lentovaraus').css('background-color', 'hotpink');
 		$('.huolto').css('background-color', 'yellowgreen');
+		
+		$('.lentovaraus, .huolto').mouseover(function() {
+			var varauksenid = $(this).attr("rel");
+			$('div[rel='+varauksenid+']').css('opacity', '1');
+		});
+		
+		$('.lentovaraus, .huolto').mouseout(function() {
+			var varauksenid = $(this).attr("rel");
+			$('div[rel='+varauksenid+']').css('opacity', '.9');
+		});
 
 		$('.lentovaraus, .huolto').click(function() {
 			var varauksenid = $(this).attr("rel");
