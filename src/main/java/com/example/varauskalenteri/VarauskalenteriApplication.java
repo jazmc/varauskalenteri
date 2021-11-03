@@ -50,11 +50,12 @@ public class VarauskalenteriApplication {
 			Varaus h = new Varaus(LocalDateTime.parse("2021-11-20 12:30", formatter), LocalDateTime.parse("2021-11-20 15:30", formatter), "varaaja", "selitys", a);
 			Varaus m = new Varaus(LocalDateTime.parse("2021-11-22 16:00", formatter), LocalDateTime.parse("2021-11-22 19:30", formatter), "varaaja", "selitys", b);
 			Varaus n = new Varaus(LocalDateTime.parse("2021-11-15 07:30", formatter), LocalDateTime.parse("2021-11-15 12:30", formatter), "aamuvirkku", "selitys", a);
-			
+			Varaus o = new Varaus(LocalDateTime.parse("2021-11-14 14:00", formatter), LocalDateTime.parse("2021-11-14 15:00", formatter), "pikalentäjä", "selitys", a);
 			
 			repository.save(h);
 			repository.save(m);
 			repository.save(n);
+			repository.save(o);
 
 		};
 	}

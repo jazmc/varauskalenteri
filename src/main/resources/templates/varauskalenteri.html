@@ -11,7 +11,9 @@
 	crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap"
+	rel="stylesheet">
 <script src="https://kit.fontawesome.com/7e7cff31ed.js"
 	crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
@@ -26,6 +28,7 @@ body {
 	width: 100%;
 	margin: 0 auto;
 	background-color: snow;
+	position:relative;
 }
 
 .poista {
@@ -71,17 +74,18 @@ span[contenteditable=true] {
 .varauspohja tr:first-child td {
 	background-color: #F28F3B;
 	padding: .5em 0;
-	font-weight:bold;
+	font-weight: bold;
 }
+
 .varauspohja tr:first-child td div {
-	border-right:1px solid #C8553D;
-	padding-left:.3em;
+	border-right: 1px solid #C8553D;
+	padding-left: .3em;
 }
 
 .varauspohja tr:first-child {
 	position: sticky;
 	top: 0;
-	z-index: 2;
+	z-index: 3;
 	box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
 
@@ -90,14 +94,13 @@ span[contenteditable=true] {
 }
 
 .varauspohja td:not(.stay) {
-	z-index: -1;
 	min-height: 2em;
 }
 
 .flex {
 	display: flex;
 	flex-wrap: nowrap;
-	overflow:hidden;
+	overflow: hidden;
 }
 
 .flex div {
@@ -113,6 +116,12 @@ span[contenteditable=true] {
 	position: sticky;
 	left: 0;
 	background-color: #588B8B;
+	text-transform: uppercase;
+	z-index:2;
+}
+
+tr td.stay, tr.stay th {
+	color: #fff;
 }
 
 .stay th {
@@ -124,13 +133,13 @@ span[contenteditable=true] {
 	width: 10%;
 }
 
-.sunnuntai td:last-child {
-	border-bottom: 2px solid #FFD5C2;
+.sunnuntai {
+	border-bottom: 2px solid #739d9d;
 }
 
 .tunti {
 	position: relative;
-	border-right:1px solid lightgray;
+	border-right: 1px solid lightgray;
 }
 
 .lentovaraus, .huolto {
@@ -138,10 +147,17 @@ span[contenteditable=true] {
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index:5;
-	border-radius:.3em;
-	line-height:2em;
-	padding:0 .5em;
+	overflow: hidden;
+	z-index: 1;
+	border-radius: .3em;
+	line-height: 2em;
+	padding: 0 .5em;
+	opacity: .9;
+}
+
+.lentovaraus:hover, .huolto:hover {
+	opacity: 1;
+	cursor: pointer;
 }
 </style>
 <head>
@@ -189,7 +205,7 @@ span[contenteditable=true] {
 					th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.month(kkeka)} + '.'}"></div>
 			</td>
 			<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'">
-				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}">
+				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}" th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}">
 					<th:block th:each="varaus: ${varaukset}">
 						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 							th:if="${#numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
@@ -205,6 +221,11 @@ span[contenteditable=true] {
 	<script>
 		$('.lentovaraus').css('background-color', 'hotpink');
 		$('.huolto').css('background-color', 'yellowgreen');
+		
+		$('.lentovaraus, .huolto').click(function(){
+			
+			alert("osuit");
+		});
 
 		$('.muokkaa').not('.spessu').click(
 				function() {
