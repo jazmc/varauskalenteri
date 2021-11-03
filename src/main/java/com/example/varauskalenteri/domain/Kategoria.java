@@ -20,14 +20,14 @@ public class Kategoria {
 	
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "kategoria")
-	private List<Varaus> varaus;
+	private List<Varaus> varaukset;
 
 	public List<Varaus> getVaraukset() {
-		return varaus;
+		return varaukset;
 	}
 
-	public void setVaraukset(List<Varaus> varaus) {
-		this.varaus = varaus;
+	public void setVaraukset(List<Varaus> varaukset) {
+		this.varaukset = varaukset;
 	}
 
 	public Kategoria() {

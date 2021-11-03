@@ -134,8 +134,8 @@ public class VarausController {
     }    
 	
 	// REST hae kirja id:llä
-	@GetMapping("/books/{id}")
-    public @ResponseBody Optional<Varaus> etsiVarausREST(@PathVariable("id") Long iidee) {	
+	@GetMapping("/varaukset/{id}")
+    public @ResponseBody Optional<Varaus> etsiVarausREST(@PathVariable("id") Long iidee) {
     	return repository.findById(iidee);
     }   
 	

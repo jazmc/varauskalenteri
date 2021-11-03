@@ -1,11 +1,17 @@
 package com.example.varauskalenteri.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="usertable")
@@ -17,6 +23,7 @@ public class User {
 // Username with unique constraint
 	@Column(name = "username", nullable = false, unique = true)
 	private String username;
+	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String passwordHash;
 	@Column(name = "email", nullable = false)
@@ -25,9 +32,13 @@ public class User {
 	private String etunimi;
 	@Column(name = "sukunimi", nullable = false)
 	private String sukunimi;
-	
 	@Column(name = "role", nullable = false)
 	private String role;
+	
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	private List<Varaus> varaukset;
+
 	
     public User() {
     }
@@ -42,6 +53,14 @@ public class User {
 		this.role = role;
 	}
 
+	public List<Varaus> getVaraukset() {
+		return varaukset;
+	}
+
+	public void setVaraukset(List<Varaus> varaukset) {
+		this.varaukset = varaukset;
+	}
+	
 	public Long getId() {
 		return id;
 	}

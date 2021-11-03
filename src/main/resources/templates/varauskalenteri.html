@@ -157,12 +157,12 @@ tr td.stay, tr.stay th {
 	top: 0;
 	left: 0;
 	overflow: hidden;
-	margin-top:1px;
-	z-index: 1;
+	margin-top: 1px; z-index : 1;
 	border-radius: .3em;
 	line-height: 2em;
 	padding: 0 .5em;
 	opacity: .9;
+	z-index: 1;
 }
 
 .lentovaraus:hover, .huolto:hover {
@@ -182,7 +182,7 @@ tr td.stay, tr.stay th {
 	<br>
 	<br>
 	<p th:text="${#dates.format(#dates.createNow(),'YYYY/MM/dd HH:mm')}">Tekstiä</p>
-
+	
 	<table>
 		<tr th:each="varaus: ${varaukset}">
 			<td th:text="${varaus.id}">ID</td>
@@ -196,50 +196,41 @@ tr td.stay, tr.stay th {
 	</table>
 	<br>
 	<br>
-	<table class="varauspohja">
-		<tr class="stay">
-			<th>Päivä</th>
-			<td class="flex">
-				<div th:each="i : ${#numbers.sequence(0, 23, 1)}"
-					th:text="${#numbers.formatInteger(i,2)}"></div>
-			</td>
-		</tr>
-		<tr th:each="i : ${#numbers.sequence(1, vikapv, 1)}"
-			th:class="${#temporals.dayOfWeek(kkeka.plusDays(i-1))==7} ? 'sunnuntai'"
-			th:id="${#dates.format(#dates.createNow(),'YYYY') eq #temporals.format(kkeka, 'YYYY') and #dates.format(#dates.createNow(),'MM') eq #temporals.format(kkeka, 'MM') and #dates.format(#dates.createNow(),'dd') eq #numbers.formatInteger(i,2)} ? 'tanaan'">
-			<td class="stay"
-				th:switch="${#temporals.dayOfWeek(kkeka.plusDays(i-1))}"><span
-				th:case="1">Maanantai</span> <span th:case="2">Tiistai</span> <span
-				th:case="3">Keskiviikko</span> <span th:case="4">Torstai</span> <span
-				th:case="5">Perjantai</span> <span th:case="6">Lauantai</span> <span
-				th:case="7">Sunnuntai</span>
-				<div class="pvanro"
-					th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.month(kkeka)} + '.'}"></div>
-			</td>
-			<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'">
-				<div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}"
-					th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}">
-					<th:block th:each="varaus: ${varaukset}">
-						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
-							th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
-							th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
-							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'">Varaus</div>
-							
-						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
-							th:if="${#temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) > i and j == 0}"
-							th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (jatkuu) ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (jatkuu)'}"
-							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'">Varaus</div>
-							
-						<div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
-							th:if="${#temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) == i and #numbers.formatInteger(j,2) eq #temporals.format(varaus.loppu, 'HH')}"
-							th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
-							th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:0;'">Varaus</div>
-
-					</th:block>
-				</div>
-			</td>
-		</tr>
-	</table>
+	<div class="kalenteripohja">
+		<table class="varauspohja">
+			<tr class="stay">
+				<th>Päivä</th>
+				<td class="flex">
+					<div th:each="i : ${#numbers.sequence(0, 23, 1)}"
+						th:text="${#numbers.formatInteger(i,2)}"></div>
+				</td>
+			</tr>
+			<tr th:each="i : ${#numbers.sequence(1, vikapv, 1)}"
+				th:class="${#temporals.dayOfWeek(kkeka.plusDays(i-1))==7} ? 'sunnuntai'"
+				th:id="${#dates.format(#dates.createNow(),'YYYY') eq #temporals.format(kkeka, 'YYYY') and #dates.format(#dates.createNow(),'MM') eq #temporals.format(kkeka, 'MM') and #dates.format(#dates.createNow(),'dd') eq #numbers.formatInteger(i,2)} ? 'tanaan'">
+				<td class="stay"
+					th:switch="${#temporals.dayOfWeek(kkeka.plusDays(i-1))}"><span
+					th:case="1">Maanantai</span><span th:case="2">Tiistai</span><span
+					th:case="3">Keskiviikko</span><span th:case="4">Torstai</span><span
+					th:case="5">Perjantai</span><span th:case="6">Lauantai</span><span
+					th:case="7">Sunnuntai</span>
+					<div class="pvanro"
+						th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.month(kkeka)} + '.'}"></div>
+				</td>
+				<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'"><div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}"
+						th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}"><th:block th:each="varaus: ${varaukset}"><div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
+								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
+								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px));'"></div><div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) > i and j == 0}"
+								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (jatkuu) ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (jatkuu)'}"
+								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); border-top-left-radius:0; border-bottom-left-radius:0;'"></div><div th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:if="${#temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) == i and #numbers.formatInteger(j,2) eq #temporals.format(varaus.loppu, 'HH')}"
+								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (päättyy)' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (päättyy)'}"
+								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:0; text-align:right;'"></div></th:block></div></td>
+			</tr>
+		</table>
+	</div>
 
 	<script>
 		$('.lentovaraus').css('background-color', 'hotpink');
