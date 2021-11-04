@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,7 +43,7 @@ public class VarausController {
 
 	// perussivu
 	@RequestMapping(value={"/index", "/varauskalenteri"})
-	public String varausList(Model model, @RequestParam(value = "kk", required = false) String kk) {
+	public String varausList(Model model, @RequestParam(value = "v", required = false) String v, @RequestParam(value = "kk", required = false) String kk) {
 		// tehdään aina:
 		model.addAttribute("varaukset", repository.findAll());
 		model.addAttribute("kategoriat", catrep.findAll());
@@ -50,7 +51,7 @@ public class VarausController {
 		LocalDate kkeka;
 		int vikapv;
 		
-		if (kk == null) { // jos kuukautta ei oo annettu
+		if (kk == null && v == null) { // tämä vuosi, tämä kuukausi
 			Calendar cal = Calendar.getInstance();
 			vikapv = cal.getActualMaximum(Calendar.DATE);
 			model.addAttribute("vikapv", vikapv);
@@ -60,7 +61,22 @@ public class VarausController {
 			kkeka = nyt.with(TemporalAdjusters.firstDayOfMonth());
 			model.addAttribute("kkeka", kkeka);
 
-		} else {
+		} else if (v != null && kk != null) { // vuosi ja kuukausi annettu
+			
+			Calendar cal = Calendar.getInstance();
+			int kuukausi = Integer.parseInt(kk);
+			cal.set(Calendar.MONTH, kuukausi-1);
+			int vuosi = Integer.parseInt(v);
+			cal.set(Calendar.YEAR, vuosi);
+			
+			vikapv = cal.getActualMaximum(Calendar.DATE);
+			model.addAttribute("vikapv", vikapv);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			
+			kkeka = LocalDate.of(vuosi, kuukausi, 1);
+			model.addAttribute("kkeka", kkeka);
+			
+		} else { // tämä vuosi, kuukausi annettu
 			Calendar cal = Calendar.getInstance();
 			int kuukausi = Integer.parseInt(kk);
 			cal.set(Calendar.MONTH, kuukausi-1);
@@ -72,10 +88,11 @@ public class VarausController {
 			int haluttuvuosi = cal.get(Calendar.YEAR);
 			
 			kkeka = LocalDate.of(haluttuvuosi, kuukausi, 1);
+			model.addAttribute("kkeka", kkeka);
 			
 		}
-		model.addAttribute("kkeka", kkeka);
 		// return .html
+		System.out.println(kkeka);
 		return "varauskalenteri";
 	}
 	

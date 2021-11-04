@@ -157,7 +157,7 @@ tr td.stay, tr.stay th {
 	border-radius: .3em;
 	line-height: 2em;
 	padding: 0 .5em;
-	opacity: .9;
+	opacity: .8;
 	z-index: 1;
 }
 
@@ -240,11 +240,24 @@ tr td.stay, tr.stay th {
 }
 
 .ylanamikat {
-	position: fixed;
-	top: 9em;
-	width: 100%;
+	position: absolute;
+	top: -2em;
+	width: calc(100vw - 2em);
 	text-align:center;
 	z-index:-1;
+	padding:0 1em;
+}
+
+.ylanamikat div a i {
+	vertical-align:middle;
+}
+
+.ylanamikat div a {
+	display:flex;
+	align-items:center;
+	line-height:0;
+	justify-content:space-between;
+	gap:.5em;
 }
 
 .vasenselektori {
