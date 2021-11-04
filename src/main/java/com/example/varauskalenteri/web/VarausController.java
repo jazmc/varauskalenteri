@@ -86,7 +86,7 @@ public class VarausController {
 		// luodaan olio parametreinä saaduista string-muuttujista
 		Optional<Kategoria> katsu = catrep.findById(Long.parseLong(cat));
 		Kategoria uusiKatsu = katsu.get();
-		Varaus uusvaraus = new Varaus(alku, loppu, varaaja, selitys, uusiKatsu);
+		Varaus uusvaraus = new Varaus(alku, loppu, selitys, uusiKatsu);
 		// tallennus
 		repository.save(uusvaraus);
 		// uudelleenohjaus perussivulle
@@ -116,9 +116,6 @@ public class VarausController {
 			case "loppu":
 				LocalDateTime dateTime2 = LocalDateTime.parse(val, formatter);
 				paivitettavaVaraus.setLoppu(dateTime2);
-				break;
-			case "varaaja":
-				paivitettavaVaraus.setVaraaja(val);
 				break;
 			case "selitys":
 				paivitettavaVaraus.setSelitys(val);

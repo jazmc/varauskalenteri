@@ -24,7 +24,7 @@ public class VarausRepositoryTests {
 
     @Test
     public void etsiTestiVaraus() {
-        List<Varaus> varaus = repository.findByVaraaja("Testivaraaja");
+        List<Varaus> varaus = repository.findBySelitys("Testivaraaja");
         
         assertThat(varaus).hasSize(1);
 

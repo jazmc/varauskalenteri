@@ -23,7 +23,7 @@ public class Varaus {
 	private Long id;
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime alku, loppu;
-	private String varaaja, selitys;
+	private String selitys;
 	private double kesto;
 
 	@ManyToOne
@@ -54,24 +54,22 @@ public class Varaus {
 
 	public Varaus() {}
 
-	public Varaus(LocalDateTime alku, LocalDateTime loppu, String varaaja, String selitys, Kategoria kategoria) {
+	public Varaus(LocalDateTime alku, LocalDateTime loppu, String selitys, Kategoria kategoria) {
 		super();
 		this.alku = alku;
 		this.loppu = loppu;
 		Duration dur = Duration.between(alku, loppu);
 		this.setKesto((double)dur.toMinutes() / 60);
-		this.varaaja = varaaja;
 		this.selitys = selitys;
 		this.kategoria = kategoria;
 	}
 	
-	public Varaus(LocalDateTime alku, LocalDateTime loppu, String varaaja, String selitys) {
+	public Varaus(LocalDateTime alku, LocalDateTime loppu, String selitys) {
 		super();
 		this.alku = alku;
 		this.loppu = loppu;
 		Duration dur = Duration.between(alku, loppu);
 		this.setKesto((double)dur.toMinutes() / 60);
-		this.varaaja = varaaja;
 		this.selitys = selitys;
 		this.kategoria = null;
 	}
@@ -100,14 +98,6 @@ public class Varaus {
 		this.loppu = loppu;
 	}
 
-	public String getVaraaja() {
-		return varaaja;
-	}
-
-	public void setVaraaja(String varaaja) {
-		this.varaaja = varaaja;
-	}
-
 	public String getSelitys() {
 		return selitys;
 	}
@@ -127,9 +117,9 @@ public class Varaus {
 	@Override
 	public String toString() {
 		if (this.kategoria != null) {
-			return "Varaus id=" + id + ", alku=" + alku + ",loppu=" + loppu + ",kesto=" + kesto + ",varaaja=" + varaaja + ",selitys=" + selitys + ",kategoria=" + this.getKategoria();
+			return "Varaus id=" + id + ", alku=" + alku + ",loppu=" + loppu + ",kesto=" + kesto + ",selitys=" + selitys + ",kategoria=" + this.getKategoria();
 		} else {
-			return "Varaus id=" + id + ", alku=" + alku + ",loppu=" + loppu + ",kesto=" + kesto + ",varaaja=" + varaaja + ",selitys=" + selitys;
+			return "Varaus id=" + id + ", alku=" + alku + ",loppu=" + loppu + ",kesto=" + kesto + ",selitys=" + selitys;
 		}
 	}
 

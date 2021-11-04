@@ -125,6 +125,7 @@ span[contenteditable=true] {
 
 tr td.stay, tr.stay th {
 	color: #fff;
+	padding: 0 .5em;
 }
 
 .stay th {
@@ -192,52 +193,70 @@ tr td.stay, tr.stay th {
 .verhonsisalto {
 	background-color: white;
 	margin: auto;
-	width:90%;
+	width: 90%;
 	max-width: 800px;
 	margin-top: 20vh;
 	padding: 1em 2em;
 	border-radius: 1em;
 	font-family: 'Anonymous Pro', monospace;
-	text-align:center;
+	text-align: center;
 }
 
 .verhonsisalto table {
-	width:100%;
-	text-align:left;
+	width: 100%;
+	text-align: left;
 }
 
 .verhonsisalto table td, .verhonsisalto table th {
-	padding:.5em;
+	padding: .5em;
 	width: 25%;
 }
 
 .verhonsisalto table th {
-	text-transform:uppercase;
+	text-transform: uppercase;
 	color: #588B8B;
-	font-weight:bold;
-	font-size:1.2em;
-	text-align:center;
+	font-weight: bold;
+	font-size: 1.2em;
+	text-align: center;
 }
 
-
 .verhonsisalto table tr td:nth-child(odd) {
-	text-transform:uppercase;
+	text-transform: uppercase;
 	color: #C8553D;
-	font-weight:bold;
-	text-align:right;
-	width:10%;
+	font-weight: bold;
+	text-align: right;
+	width: 10%;
 }
 
 .kayttajainfo {
-	display:inline-block;
-	margin:0 1em 0 0;
-	text-align:left;
+	display: inline-block;
+	margin: 0 1em 0 0;
+	text-align: left;
 }
 
-.ylaosa .flex {justify-content:center; align-items:center;}
+.ylaosa .flex {
+	justify-content: center;
+	align-items: center;
+}
+
+.ylanamikat {
+	position: fixed;
+	top: 9em;
+	width: 100%;
+	text-align:center;
+	z-index:-1;
+}
+
+.vasenselektori {
+	float:left;
+}
+
+.oikeaselektori {
+	float:right;
+}
 
 #poistoloota {
-	margin-top:1em;
+	margin-top: 1em;
 }
 
 footer {

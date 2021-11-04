@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface VarausRepository extends CrudRepository<Varaus, Long> {
 	
- List<Varaus> findByVaraaja(String varaaja);
+ List<Varaus> findBySelitys(String selitys);
  
 }

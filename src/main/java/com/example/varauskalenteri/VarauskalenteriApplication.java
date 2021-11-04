@@ -51,16 +51,16 @@ public class VarauskalenteriApplication {
 			
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-			Varaus h = new Varaus(LocalDateTime.parse("2021-11-20 12:30", formatter), LocalDateTime.parse("2021-11-20 15:30", formatter), "varaaja", "selitys", a);
-			Varaus m = new Varaus(LocalDateTime.parse("2021-11-22 16:00", formatter), LocalDateTime.parse("2021-11-25 19:30", formatter), "varaaja", "selitys", b);
-			Varaus n = new Varaus(LocalDateTime.parse("2021-11-15 07:30", formatter), LocalDateTime.parse("2021-11-15 12:30", formatter), "aamuvirkku", "selitys", a);
-			Varaus o = new Varaus(LocalDateTime.parse("2021-11-14 14:00", formatter), LocalDateTime.parse("2021-11-14 15:00", formatter), "pikalentäjä", "selitys", a);
-			Varaus p = new Varaus(LocalDateTime.parse("2021-11-17 14:00", formatter), LocalDateTime.parse("2021-11-17 18:00", formatter), "pikalentäjä", "selitys", a);
-			Varaus q = new Varaus(LocalDateTime.parse("2021-11-21 10:00", formatter), LocalDateTime.parse("2021-11-21 13:30", formatter), "pikalentäjä", "selitys", a);
-			Varaus r = new Varaus(LocalDateTime.parse("2021-11-08 17:00", formatter), LocalDateTime.parse("2021-11-08 21:00", formatter), "pikalentäjä", "selitys", a);
+			Varaus h = new Varaus(LocalDateTime.parse("2021-11-20 12:30", formatter), LocalDateTime.parse("2021-11-20 15:30", formatter), "Matkalento EFML-EFKE-EFML", a);
+			Varaus m = new Varaus(LocalDateTime.parse("2021-11-22 16:00", formatter), LocalDateTime.parse("2021-11-25 19:30", formatter), "Moottorin määräaikaishuolto", b);
+			Varaus n = new Varaus(LocalDateTime.parse("2021-11-15 07:30", formatter), LocalDateTime.parse("2021-11-15 12:30", formatter), "Matkalento EFML-EFKO-EFOU-EFML", a);
+			Varaus o = new Varaus(LocalDateTime.parse("2021-11-14 14:00", formatter), LocalDateTime.parse("2021-11-14 15:00", formatter), "Paikallislento / laskukierros", a);
+			Varaus p = new Varaus(LocalDateTime.parse("2021-11-17 14:00", formatter), LocalDateTime.parse("2021-11-17 18:00", formatter), "Matkalento EFML-EFYL-EFML", a);
+			Varaus q = new Varaus(LocalDateTime.parse("2021-11-21 10:00", formatter), LocalDateTime.parse("2021-11-21 13:30", formatter), "Koululentoja", a);
+			Varaus r = new Varaus(LocalDateTime.parse("2021-11-08 17:00", formatter), LocalDateTime.parse("2021-11-08 21:00", formatter), "Matkalento EFML-EFRU-EFKE-EFML", a);
 			
 			h.setUser(user2);
-			m.setUser(user1);
+			m.setUser(user2);
 			n.setUser(user1);
 			o.setUser(user3);
 			p.setUser(user3);
