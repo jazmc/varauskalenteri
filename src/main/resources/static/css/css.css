@@ -200,6 +200,7 @@ tr td.stay, tr.stay th {
 	border-radius: 1em;
 	font-family: 'Anonymous Pro', monospace;
 	text-align: center;
+	position: relative;
 }
 
 .verhonsisalto table {
@@ -243,33 +244,52 @@ tr td.stay, tr.stay th {
 	position: absolute;
 	top: -2em;
 	width: calc(100vw - 2em);
-	text-align:center;
-	z-index:-1;
-	padding:0 1em;
+	text-align: center;
+	z-index: -1;
+	padding: 0 1em;
 }
 
 .ylanamikat div a i {
-	vertical-align:middle;
+	vertical-align: middle;
 }
 
 .ylanamikat div a {
-	display:flex;
-	align-items:center;
-	line-height:0;
-	justify-content:space-between;
-	gap:.5em;
+	display: flex;
+	align-items: center;
+	line-height: 0;
+	justify-content: space-between;
+	gap: .5em;
 }
 
 .vasenselektori {
-	float:left;
+	float: left;
 }
 
 .oikeaselektori {
-	float:right;
+	float: right;
 }
 
 #poistoloota {
 	margin-top: 1em;
+}
+
+div#suljenappi {
+	position: absolute;
+	right: 0.5em;
+	top: 0.5em;
+	width: 1em;
+	font-size: 1.5em;
+	display: flex;
+	height: 1em;
+	color:#C8553D;
+	cursor:pointer;
+}
+
+#varausnappi {
+	width:100%;
+	height:100%;
+	position:relative;
+	z-index:1;
 }
 
 footer {

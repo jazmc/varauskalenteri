@@ -35,13 +35,15 @@ public class VarauskalenteriApplication {
 			
 			// Create users: admin/admin user/user
 			User user1 = new User("user", "Ilpo", "Ilmailuautisti", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "050 1234 567", "USER");
-			User user2 = new User("admin", "Esko", "Euroopanomistaja", "$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C", "ex@domain.com", "050 9876 543", "ADMIN");
+			User user2 = new User("admin", "Kalle", "Kerhoaktiivi", "$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C", "ex@domain.com", "050 9876 543", "ADMIN");
 			User user3 = new User("user1", "Seppo", "Sunnuntailentäjä", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "040 1234 567", "USER");
 			User user4 = new User("user2", "Leevi", "Lentokonefani", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "041 1234 999", "USER");
+			User user5 = new User("user3", "Urpo", "Ultrakuski", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "045 1234 987", "USER");
 			urep.save(user1);
 			urep.save(user2);
 			urep.save(user3);
 			urep.save(user4);
+			urep.save(user5);
 			
 			Kategoria a = new Kategoria("Lentovaraus");
 			Kategoria b = new Kategoria("Huolto");
@@ -58,6 +60,7 @@ public class VarauskalenteriApplication {
 			Varaus p = new Varaus(LocalDateTime.parse("2021-11-17 14:00", formatter), LocalDateTime.parse("2021-11-17 18:00", formatter), "Matkalento EFML-EFYL-EFML", a);
 			Varaus q = new Varaus(LocalDateTime.parse("2021-11-21 10:00", formatter), LocalDateTime.parse("2021-11-21 13:30", formatter), "Koululentoja", a);
 			Varaus r = new Varaus(LocalDateTime.parse("2021-11-08 17:00", formatter), LocalDateTime.parse("2021-11-08 21:00", formatter), "Matkalento EFML-EFRU-EFKE-EFML", a);
+			Varaus s = new Varaus(LocalDateTime.parse("2021-11-16 17:30", formatter), LocalDateTime.parse("2021-11-16 21:00", formatter), "Hurulentelyä Oulun TMA:lla", a);
 			
 			h.setUser(user2);
 			m.setUser(user2);
@@ -66,6 +69,7 @@ public class VarauskalenteriApplication {
 			p.setUser(user3);
 			q.setUser(user4);
 			r.setUser(user2);
+			s.setUser(user5);
 			
 			repository.save(h);
 			repository.save(m);
@@ -74,6 +78,8 @@ public class VarauskalenteriApplication {
 			repository.save(p);
 			repository.save(q);
 			repository.save(r);
+			repository.save(s);
+			
 
 		};
 	}
