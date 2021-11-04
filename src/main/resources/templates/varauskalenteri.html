@@ -23,6 +23,7 @@
 <body>
 	<div class="verho">
 		<div class="verhonsisalto">
+			<div id="varausid" style="display:none"></div>
 			<table>
 				<tr>
 					<th id="varausotsikko" colspan="4"></th>
@@ -34,6 +35,10 @@
 					<td id="varausloppu"></td>
 				</tr>
 				<tr>
+					<td class="ots">Lisätiedot</td>
+					<td colspan="3" id="selite"></td>
+				</tr>
+				<tr>
 					<th colspan="4">Varaajan tiedot</th>
 				</tr>
 				<tr>
@@ -43,16 +48,21 @@
 					<td id="varaajapuhelin"></td>
 				</tr>
 			</table>
+			<div id="poistoloota"></div>
 		</div>
 	</div>
 	<div class="ylaosa">
 	<h1 th:inline="text">LENTOVARAUSKALENTERI</h1>
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" class="btn btn-outline-light btn-sm" value="Kirjaudu ulos" />
+	<div class="flex">
+	<p class="kayttajainfo">Tervetuloa, <b id="kayttis" th:attr="data-kayttaja=${#httpServletRequest.remoteUser}"></b>!<br>
+	Varauskalenteri päivitetty <span th:text="${#dates.format(#dates.createNow(),'dd.MM.yyyy HH:mm')}">Päivämäärä</span></p>
+	<form  style="display:inline-block;" th:action="@{/logout}" method="post">
+		<input type="submit" class="btn btn-outline-light" value="Kirjaudu ulos" />
 	</form>
+	</div>
 	<br>
 	<br>
-	<p th:text="${#dates.format(#dates.createNow(),'YYYY/MM/dd HH:mm')}">Tekstiä</p>
+	
 
 	</div>
 
@@ -94,6 +104,9 @@
 	<footer>webdesign &copy; Jasmin Lumme</footer>
 
 	<script>
+		var kayttis = $("#kayttis").attr("data-kayttaja");
+		haeKayttaja(kayttis);
+		
 		$('.huolto').css('background-color', '#baa29d');
 		
 		$('.lentovaraus').each(function(){
@@ -179,10 +192,31 @@
 			});
 		}
 		
+		function haeKayttaja(uname) {
+			$.ajax({
+			    url: "/kayttajat/"+uname,
+			    type: "GET",
+			    dataType: "json",
+			    data: {},
+			    success: function(data){
+			        $("#kayttis").html(data.etunimi + " " + data.sukunimi);
+			    },
+			    error: function(error){
+			         alert("Käyttäjätietojen hakeminen ei onnistunut. Ota yhteys järjestelmän ylläpitäjään.");
+			         console.log(error);
+			    }
+			});
+		}
+		
 		function naytaVaraus(data) {
+			if (kayttis == data.user.username || kayttis == "admin") {
+				$("#poistoloota").append("<div><button class=\"btn btn-outline-primary\"/>Muokkaa varausta</button> <button class=\"btn btn-outline-danger\" onclick=\"vahvistaPoisto()\"/>Poista varaus</button></div>")
+			}
+			$("#varausid").html(data.id);
 			$("#varausotsikko").append("<span>"+ data.kategoria.name +"</span>");
 			$("#varaajaetu").append("<span>" + data.user.etunimi + " " + data.user.sukunimi + "</span>")
-			$("#varaajapuhelin").append("<span>p. ?," + data.user.email + "</span>")
+			$("#varaajapuhelin").append("<span>p. " + data.user.phone + ", " + data.user.email + "</span>")
+			$("#selite").append("<span>" + data.selitys + "</span>")
 			var valku = formatoiPaivays(data.alku);
 			var vloppu = formatoiPaivays(data.loppu);
 			$("#varausalku").append("<span>" + valku + "</span>");
@@ -192,7 +226,7 @@
 		
 		function tyhjennaVerho() {
 			$(".verho").hide();
-			$("#varaajaetu, #varausotsikko, #varaajapuhelin, #varausalku, #varausloppu").html("");
+			$("#varausid, #varaajaetu, #varausotsikko, #varaajapuhelin, #varausalku, #varausloppu, #selite, #poistoloota").html("");
 		}
 		
 		function formatoiPaivays(input) {
@@ -201,7 +235,16 @@
 			  var paivaysosa = [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('.')
 			  var tuntiosa = [pad(d.getHours()), pad(d.getMinutes())].join(':')
 			  return paivaysosa + " klo " + tuntiosa
+		}
+		
+		function vahvistaPoisto() {
+			var poistettavaid = $("#varausid").html();
+			if (confirm('Haluatko varmasti poistaa tämän varauksen?')) {
+			    location.href = '/delete/'+poistettavaid;
+			} else {
+			    return;
 			}
+		}
 	</script>
 </body>
 </html>

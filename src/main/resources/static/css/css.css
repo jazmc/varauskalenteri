@@ -62,6 +62,7 @@ span[contenteditable=true] {
 	width: 150%;
 	font-family: 'Anonymous Pro', monospace;
 	background-color: snow;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .3);
 }
 
 .varauspohja tr:first-child td {
@@ -164,8 +165,7 @@ tr td.stay, tr.stay th {
 }
 
 .kalenteripohja {
-	margin-top: 20vh;
-	box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+	margin-top: 11em;
 	margin-bottom: 3em;
 }
 
@@ -198,14 +198,17 @@ tr td.stay, tr.stay th {
 	padding: 1em 2em;
 	border-radius: 1em;
 	font-family: 'Anonymous Pro', monospace;
+	text-align:center;
 }
 
 .verhonsisalto table {
 	width:100%;
+	text-align:left;
 }
 
 .verhonsisalto table td, .verhonsisalto table th {
 	padding:.5em;
+	width: 25%;
 }
 
 .verhonsisalto table th {
@@ -221,6 +224,20 @@ tr td.stay, tr.stay th {
 	text-transform:uppercase;
 	color: #C8553D;
 	font-weight:bold;
+	text-align:right;
+	width:10%;
+}
+
+.kayttajainfo {
+	display:inline-block;
+	margin:0 1em 0 0;
+	text-align:left;
+}
+
+.ylaosa .flex {justify-content:center; align-items:center;}
+
+#poistoloota {
+	margin-top:1em;
 }
 
 footer {

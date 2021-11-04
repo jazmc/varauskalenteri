@@ -28,6 +28,8 @@ public class User {
 	private String passwordHash;
 	@Column(name = "email", nullable = false)
 	private String email;
+	@Column(name = "phone", nullable = false)
+	private String phone;
 	@Column(name = "etunimi", nullable = false)
 	private String etunimi;
 	@Column(name = "sukunimi", nullable = false)
@@ -43,13 +45,14 @@ public class User {
     public User() {
     }
 
-	public User(String username, String etunimi, String sukunimi, String passwordHash, String email, String role) {
+	public User(String username, String etunimi, String sukunimi, String passwordHash, String email, String phone, String role) {
 		super();
 		this.username = username;
 		this.etunimi = etunimi;
 		this.sukunimi = sukunimi;
 		this.passwordHash = passwordHash;
 		this.email = email;
+		this.phone = phone;
 		this.role = role;
 	}
 
@@ -108,4 +111,13 @@ public class User {
 	public void setSukunimi(String sukunimi) {
 		this.sukunimi = sukunimi;
 	}
+	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 }

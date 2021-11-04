@@ -23,6 +23,8 @@ import com.example.varauskalenteri.domain.Varaus;
 import com.example.varauskalenteri.domain.VarausRepository;
 import com.example.varauskalenteri.domain.Kategoria;
 import com.example.varauskalenteri.domain.KategoriaRepository;
+import com.example.varauskalenteri.domain.User;
+import com.example.varauskalenteri.domain.UserRepository;
 
 @Controller
 public class VarausController {
@@ -30,6 +32,8 @@ public class VarausController {
 	private VarausRepository repository;
 	@Autowired
 	private KategoriaRepository catrep;
+	@Autowired
+	private UserRepository urep;
 	
     @RequestMapping(value="/login")
     public String login() {	
@@ -133,15 +137,20 @@ public class VarausController {
         return (List<Varaus>) repository.findAll();
     }    
 	
-	// REST hae kirja id:llä
+	// REST hae varaus id:llä
 	@GetMapping("/varaukset/{id}")
     public @ResponseBody Optional<Varaus> etsiVarausREST(@PathVariable("id") Long iidee) {
     	return repository.findById(iidee);
     }   
 	
+	// REST hae varaus id:llä
+	@GetMapping("/kayttajat/{uname}")
+    public @ResponseBody User etsiUserREST(@PathVariable("uname") String uname) {
+    	return urep.findByUsername(uname);
+    } 
+	
 	// poistolinkki /delete/id
 	@GetMapping("/delete/{no}")
-	@PreAuthorize("hasAuthority('ADMIN')")
 	public String deleteVaraus(@PathVariable String no) {
 		// string longiksi
 		long id = Long.parseLong(no);

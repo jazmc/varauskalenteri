@@ -34,10 +34,10 @@ public class VarauskalenteriApplication {
 		return (args) -> {
 			
 			// Create users: admin/admin user/user
-			User user1 = new User("user", "Ilpo", "Ilmailuautisti", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "USER");
-			User user2 = new User("admin", "Hannu", "Hallinnoija", "$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C", "ex@domain.com", "ADMIN");
-			User user3 = new User("user1", "Esko", "Esimerkkilentäjä", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "USER");
-			User user4 = new User("user2", "Leevi", "Lentokonefani", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "USER");
+			User user1 = new User("user", "Ilpo", "Ilmailuautisti", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "050 1234 567", "USER");
+			User user2 = new User("admin", "Esko", "Euroopanomistaja", "$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C", "ex@domain.com", "050 9876 543", "ADMIN");
+			User user3 = new User("user1", "Seppo", "Sunnuntailentäjä", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "040 1234 567", "USER");
+			User user4 = new User("user2", "Leevi", "Lentokonefani", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "example@something.com", "041 1234 999", "USER");
 			urep.save(user1);
 			urep.save(user2);
 			urep.save(user3);
