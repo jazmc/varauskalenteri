@@ -21,6 +21,30 @@
 <title>Varauskalenteri</title>
 </head>
 <body>
+	<div class="verho">
+		<div class="verhonsisalto">
+			<table>
+				<tr>
+					<th id="varausotsikko" colspan="4"></th>
+				</tr>
+				<tr>
+					<td class="ots">Alkaa</td>
+					<td id="varausalku"></td>
+					<td class="ots">Päättyy</td>
+					<td id="varausloppu"></td>
+				</tr>
+				<tr>
+					<th colspan="4">Varaajan tiedot</th>
+				</tr>
+				<tr>
+					<td class="ots">Nimi</td>
+					<td id="varaajaetu"></td>
+					<td class="ots">Yhteystiedot</td>
+					<td id="varaajapuhelin"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
 	<div class="ylaosa">
 	<h1 th:inline="text">LENTOVARAUSKALENTERI</h1>
 	<form th:action="@{/logout}" method="post">
@@ -92,6 +116,13 @@
 			var varauksenid = $(this).attr("rel");
 			haeVaraus(varauksenid);
 		});
+		
+		$(".verho").not('.verhonsisalto').click(function(e) {
+			if(e.target !== this) {
+				return;
+			}
+			tyhjennaVerho();
+		})
 
 		$('.muokkaa').not('.spessu').click(
 				function() {
@@ -139,8 +170,7 @@
 			    dataType: "json",
 			    data: {},
 			    success: function(data){
-			    	alert("Onnistui! Varauksen tiedot consolessa.");
-			        console.log(data);
+			        naytaVaraus(data);
 			    },
 			    error: function(error){
 			         alert("Error, errorin kuvaus consolessa");
@@ -148,6 +178,30 @@
 			    }
 			});
 		}
+		
+		function naytaVaraus(data) {
+			$("#varausotsikko").append("<span>"+ data.kategoria.name +"</span>");
+			$("#varaajaetu").append("<span>" + data.user.etunimi + " " + data.user.sukunimi + "</span>")
+			$("#varaajapuhelin").append("<span>p. ?," + data.user.email + "</span>")
+			var valku = formatoiPaivays(data.alku);
+			var vloppu = formatoiPaivays(data.loppu);
+			$("#varausalku").append("<span>" + valku + "</span>");
+			$("#varausloppu").append("<span>" + vloppu + "</span>");
+			$(".verho").fadeIn();
+		}
+		
+		function tyhjennaVerho() {
+			$(".verho").hide();
+			$("#varaajaetu, #varausotsikko, #varaajapuhelin, #varausalku, #varausloppu").html("");
+		}
+		
+		function formatoiPaivays(input) {
+			  function pad(s) { return (s < 10) ? '0' + s : s; }
+			  var d = new Date(input)
+			  var paivaysosa = [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('.')
+			  var tuntiosa = [pad(d.getHours()), pad(d.getMinutes())].join(':')
+			  return paivaysosa + " klo " + tuntiosa
+			}
 	</script>
 </body>
 </html>

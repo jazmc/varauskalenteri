@@ -1,8 +1,8 @@
 @charset "UTF-8";
 
-@font-face { 
-    font-family: 'Graced Script'; 
-    src: url('GracedScript.ttf') format('truetype');
+@font-face {
+	font-family: 'Graced Script';
+	src: url('GracedScript.ttf') format('truetype');
 }
 
 td {
@@ -19,8 +19,8 @@ body {
 
 h1 {
 	font-family: 'Patrick Hand SC', cursive;
-	font-size:3.5rem;
-	color:#FFD5C2;
+	font-size: 3.5rem;
+	color: #FFD5C2;
 }
 
 .poista {
@@ -61,7 +61,7 @@ span[contenteditable=true] {
 .varauspohja {
 	width: 150%;
 	font-family: 'Anonymous Pro', monospace;
-	background-color:snow;
+	background-color: snow;
 }
 
 .varauspohja tr:first-child td {
@@ -150,7 +150,8 @@ tr td.stay, tr.stay th {
 	top: 0;
 	left: 0;
 	overflow: hidden;
-	margin-top: 1px; z-index : 1;
+	margin-top: 1px;
+	z-index: 1;
 	border-radius: .3em;
 	line-height: 2em;
 	padding: 0 .5em;
@@ -163,26 +164,71 @@ tr td.stay, tr.stay th {
 }
 
 .kalenteripohja {
-	margin-top:20vh;
-	box-shadow:0 0 10px rgba(0,0,0,.3);
-	margin-bottom:3em;
+	margin-top: 20vh;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+	margin-bottom: 3em;
 }
 
 .ylaosa {
-	position:fixed;
-	top:0;
-	left:0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+	text-align: center;
+}
+
+.verho {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(88, 139, 139, .8);
+	z-index: 10;
+	display: none;
+}
+
+.verhonsisalto {
+	background-color: white;
+	margin: auto;
+	width:90%;
+	max-width: 800px;
+	margin-top: 20vh;
+	padding: 1em 2em;
+	border-radius: 1em;
+	font-family: 'Anonymous Pro', monospace;
+}
+
+.verhonsisalto table {
 	width:100%;
-	z-index:-1;
+}
+
+.verhonsisalto table td, .verhonsisalto table th {
+	padding:.5em;
+}
+
+.verhonsisalto table th {
+	text-transform:uppercase;
+	color: #588B8B;
+	font-weight:bold;
+	font-size:1.2em;
 	text-align:center;
 }
 
+
+.verhonsisalto table tr td:nth-child(odd) {
+	text-transform:uppercase;
+	color: #C8553D;
+	font-weight:bold;
+}
+
 footer {
-	padding:.5em;
-	text-align:center;
+	padding: .5em;
+	text-align: center;
 	font-family: 'Graced Script', cursive;
-	color: rgba(255,255,255,.4);
-	position:fixed;
-	bottom:0;
-	width:100%;
+	color: rgba(255, 255, 255, .4);
+	position: fixed;
+	bottom: 0;
+	width: 100%;
 }
