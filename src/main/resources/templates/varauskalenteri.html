@@ -93,8 +93,12 @@
 						<td id="loppuh"><input type="text" style="width: 100%" id="loppupicker" class="timepickerit" value="13:30"></td>
 					</tr>
 				</table>
+				<div class="conttinen"></div>
+				<br>
+				<button type="button" class="btn btn-outline-success">Vahvista varaus</button>
+				<button type="button" class="btn btn-outline-danger">Peruuta</button>
 			</form>
-			<div class="conttinen"></div>
+			
 		</div>
 	</div>
 	<div class="ylaosa">
@@ -152,13 +156,13 @@
 						th:text="@{${#numbers.formatInteger(i,2)} + '.' + ${#temporals.format(kkeka, 'MM')} + '.'}"></div>
 				</td>
 				<td th:class="${i%2==0} ? 'flex parillinen' : 'flex pariton'"><div class="tunti" th:each="j : ${#numbers.sequence(0, 23, 1)}"
-						th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}"><th:block th:each="varaus: ${varaukset}"><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+						th:id="@{${#temporals.year(kkeka)} + '/' + ${#temporals.month(kkeka)} + '/' + ${#numbers.formatInteger(i,2)} + '/' + ${#numbers.formatInteger(j,2)}}"><th:block th:each="varaus: ${varaukset}"><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}, data-loppu=${#temporals.format(varaus.loppu, 'dd.MM.yyyy HH:mm')}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 								th:if="${#temporals.format(kkeka, 'yyyy') == #temporals.format(varaus.alku, 'yyyy') and #temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #numbers.formatInteger(j,2) eq #temporals.format(varaus.alku, 'HH') and #numbers.formatInteger(i,2) eq #temporals.format(varaus.alku, 'dd')}"
 								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi}}"
-								th:style="${#temporals.format(varaus.alku, 'mm') eq '30'} ? 'margin-left:50%;width:calc('+${varaus.kesto}+' * (100% + 1px));' : 'width:calc('+${varaus.kesto}+' * (100% + 1px));'"></div><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:style="${#temporals.format(varaus.alku, 'mm') eq '30'} ? 'margin-left:50%;width:calc('+${varaus.kesto}+' * (100% + 1px));' : 'width:calc('+${varaus.kesto}+' * (100% + 1px));'"></div><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}, data-loppu=${#temporals.format(varaus.loppu, 'dd.MM.yyyy HH:mm')}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 								th:if="${#temporals.format(kkeka, 'yyyy') == #temporals.format(varaus.alku, 'yyyy') and #temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) > i and j == 0}"
 								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (jatkuu) ' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (jatkuu)'}"
-								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); border-top-left-radius:0; border-bottom-left-radius:0;'"></div><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
+								th:style="'width:calc('+${varaus.kesto}+' * (100% + 1px)); border-top-left-radius:0; border-bottom-left-radius:0;'"></div><div th:attr="rel=${varaus.id}, data-varaaja=${varaus.user.id}, data-loppu=${#temporals.format(varaus.loppu, 'dd.MM.yyyy HH:mm')}" th:class="${#strings.toLowerCase(varaus.kategoria.name)}"
 								th:if="${#temporals.format(kkeka, 'yyyy') == #temporals.format(varaus.alku, 'yyyy') and #temporals.format(kkeka, 'MM') == #temporals.format(varaus.alku, 'MM') and #temporals.day(varaus.alku) < i and #temporals.day(varaus.loppu) == i and #numbers.formatInteger(j,2) eq #temporals.format(varaus.loppu, 'HH')}"
 								th:text="@{${varaus.kategoria.name == 'Huolto'} ? 'HUOLTO (päättyy)' : ${varaus.user.sukunimi} + ', ' + ${varaus.user.etunimi} + ' (päättyy)'}"
 								th:style="${#temporals.format(varaus.loppu, 'mm') eq '30'} ? 'margin-right:-50%;width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:100%; text-align:right;' : 'width:calc('+${varaus.kesto}+' * (100% + 1px)); left:unset; right:100%; text-align:right;'"></div></th:block></div></td>
@@ -242,8 +246,15 @@
 			
 			$( "#alkudate" ).datepicker( "setDate", alkupv + "." + alkukk + "." + alkuv );
 			$( "#loppudate" ).datepicker( "setDate", alkupv + "." + alkukk + "." + alkuv );
-			$( "#alkupicker" ).val( alkuh + ":00" );
-			$( "#loppupicker" ).val( (parseInt(alkuh) + 1) + ":00" );
+			
+			var aika = alkupv + "." + alkukk + "." + alkuv + " " + alkuh + ":30";
+			if ($( "div[data-loppu='" + aika + "']").length > 0) {
+				$( "#alkupicker" ).val( alkuh + ":30" );
+				$( "#loppupicker" ).val( (parseInt(alkuh) + 1) + ":30" );
+			} else {
+				$( "#alkupicker" ).val( alkuh + ":00" );
+				$( "#loppupicker" ).val( (parseInt(alkuh) + 1) + ":00" );
+			}
 
 		});
 		
@@ -379,7 +390,7 @@
 		    minTime: '12:00am',
 		    maxTime: '11:59pm',
 		    startTime: '00:00',
-		    dynamic: true,
+		    dynamic: false,
 		    dropdown: true,
 		    scrollbar: true
 		});
