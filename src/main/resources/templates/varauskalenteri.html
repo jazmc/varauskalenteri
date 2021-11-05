@@ -24,16 +24,6 @@
 
 <head>
 <title>Varauskalenteri</title>
-
-  <script>
-  $( function kutsuPickeria() {
-    $( ".datepicker" ).datepicker({ minDate: -0, maxDate: "+2Y" });
-    $( ".datepicker" ).datepicker( "option", "showAnim", "fadeIn" );
-    $( ".datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
-  } );
-  
- 
-  </script>
   
 </head>
 <body>
@@ -92,11 +82,19 @@
 						<td class="ots">Klo.</td>
 						<td id="loppuh"><input type="text" style="width: 100%" id="loppupicker" class="timepickerit" value="13:30"></td>
 					</tr>
+					<tr>
+						<td>Kuvaus</td>
+						<td colspan="3">
+							<textarea style="width:100%; height:4em;" id="varauksenkuvaus" placeholder="esim. Reitti, lennon tyyppi, ..."></textarea>
+						</td>
+					</tr>
 				</table>
 				<div class="conttinen"></div>
+				<div class="valitusloota"><i>Varauksen minimikesto on yksi (1) tunti.<br>
+				Järjestelmä ei huomioi varausten päällekkäisyyksiä. Tarkistathan varausta tehdessäsi, että kone on vapaana koko varauksesi ajalla.</i></div>
 				<br>
-				<button type="button" class="btn btn-outline-success">Vahvista varaus</button>
-				<button type="button" class="btn btn-outline-danger">Peruuta</button>
+				<button type="button" class="btn btn-outline-success" id="vahvistavaraus">Vahvista varaus</button>
+				<button type="button" class="btn btn-outline-danger" id="peruutavaraus">Peruuta</button>
 			</form>
 			
 		</div>
@@ -177,6 +175,7 @@
 		var hetki = new Date();
 		var nytten = [hetki.getFullYear(), hetki.getMonth()+1, hetki.getDate(), hetki.getHours()];
 		var nyt = [];
+		var koskettu = false;
 		var suoritaladatessa = function() {
 			for(var k of nytten) {
 				if (k < 10) {
@@ -227,7 +226,7 @@
 			tyhjennaVerho();
 		});
 		
-		$(".varausverho, #suljevaraus i").click(function(e) {
+		$(".varausverho, #suljevaraus i, #peruutavaraus").click(function(e) {
 			if(e.target !== this) {
 				return;
 			}
@@ -236,6 +235,7 @@
 		
 		// varausnapin klikki
 		$(document).on('click', '#varausnappi', function(e){
+			koskettu = true;
 			$(".varausverho").fadeIn();
 			var vikapv = $("#vikapv").text();
 			
@@ -267,8 +267,15 @@
 			if(tunninid < nyt) {
 				return;
 			}
+			var muodostaaika = elemid.split("/");
+			var dataloppu = muodostaaika[2] + "." + muodostaaika[1] + "." + muodostaaika[0] + " " + muodostaaika[3] + ":30";
 			$("#varausnappi").remove();
-			$(this).append("<button id=\"varausnappi\" class=\"btn btn-sm btn-success\">VARAA</button>");
+			if ($( "div[data-loppu='" + dataloppu + "']").length > 0) {
+				$(this).append("<button id=\"varausnappi\" class=\"btn btn-sm btn-success\" style=\"margin-left:50%;\">VARAA</button>");
+			} else {
+				$(this).append("<button id=\"varausnappi\" class=\"btn btn-sm btn-success\">VARAA</button>");
+			}
+			
 		});
 
 		$('.muokkaa').not('.spessu').click(
@@ -384,6 +391,43 @@
 			}
 		}
 		
+
+		
+		function vahtaaKestoa(val) {
+			if (koskettu == true) {
+				console.log(val);
+				var alkupaiva = $( "#alkudate" ).datepicker( "getDate" );
+				var loppupaiva = $( "#loppudate" ).datepicker( "getDate" );
+				var alkutunnit = $( "#alkupicker" ).val();
+				var lopputunnit = $( "#loppupicker" ).val();
+				let [ahour, aminute] = alkutunnit.split(':');
+				let [lhour, lminute] = lopputunnit.split(':');
+				alkupaiva.setHours(ahour);
+				alkupaiva.setMinutes(aminute);
+				loppupaiva.setHours(lhour);
+				loppupaiva.setMinutes(lminute);
+				
+				if(loppupaiva < alkupaiva) {
+					alert("Varauksen loppu ei voi olla ennen sen alkua!\nMuokkaa äsken antamaasi arvoa.");
+					$("#vahvistavaraus").prop("disabled", true);
+					return false;
+				} else if ((loppupaiva-alkupaiva)/1000/60 < 60) {
+					alert("Varauksen minimikesto on 1 tunti! Muokkaa äsken antamaasi arvoa.");
+					$("#vahvistavaraus").prop("disabled", true);
+					return false;
+				} else {
+					$("#vahvistavaraus").prop("disabled", false);
+					return true;
+				}
+			}
+			
+		}
+		  $( function kutsuPickeria() {
+			    $( ".datepicker" ).datepicker({ minDate: -0, maxDate: "+2Y", onSelect: function(e) { if (vahtaaKestoa(e) == false && e != null) { $(this).datepicker("setDate", null) }} });
+			    $( ".datepicker" ).datepicker( "option", "showAnim", "fadeIn" );
+			    $( ".datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
+			  } );
+			  
 		$('.timepickerit').timepicker({
 		    timeFormat: 'HH:mm',
 		    interval: 30,
@@ -392,7 +436,8 @@
 		    startTime: '00:00',
 		    dynamic: false,
 		    dropdown: true,
-		    scrollbar: true
+		    scrollbar: true,
+		    change: function(e) { if (vahtaaKestoa(e) == false && e != null) { $(this).val(null) }}
 		});
 	</script>
 </body>
