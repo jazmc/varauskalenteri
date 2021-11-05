@@ -52,6 +52,21 @@
 			<div id="poistoloota"></div>
 		</div>
 	</div>
+	<div class="varausverho">
+		<div class="verhonsisalto">
+			<div id="suljevaraus"><i class="fas fa-times-circle"></i></div>
+			<h3>Uusi varaus</h3>
+			
+			<form>
+				<table>
+					<tr>
+						<th colspan="2">Varaus alkaa</th>
+						<th colspan="2">Varaus päättyy</th>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
 	<div class="ylaosa">
 	<h1 th:inline="text">LENTOVARAUSKALENTERI</h1>
 	<div class="flex">
@@ -125,6 +140,28 @@
 	<script>
 		var kayttis = $("#kayttis").attr("data-kayttaja");
 		haeKayttaja(kayttis);
+		var hetki = new Date();
+		var nytten = [hetki.getFullYear(), hetki.getMonth()+1, hetki.getDate(), hetki.getHours()];
+		var nyt = [];
+		var suoritaladatessa = function() {
+			for(var k of nytten) {
+				if (k < 10) {
+					k = "0" + k;
+				}
+				nyt.push(k);
+			}
+			nyt = nyt.join("");
+			
+			$(".tunti").each(function() {
+				var elemid = $(this).attr("id");
+				var tunninid = elemid.split("/").join("");
+				if(tunninid < nyt) {
+					$(this).addClass("wanha");
+				}
+			});
+		}
+		
+		suoritaladatessa();
 		
 		$('.huolto').css('background-color', '#baa29d');
 		
@@ -154,15 +191,31 @@
 				return;
 			}
 			tyhjennaVerho();
-		})
+		});
+		
+		$(".varausverho, #suljevaraus i").click(function(e) {
+			if(e.target !== this) {
+				return;
+			}
+			tyhjennaVarausverho();
+		});
+		
+		$(document).on('click', '#varausnappi', function(e){
+			$(".varausverho").fadeIn();
+		});
 		
 		$(".tunti").not(':parent').click(function(e) {
 			if(e.target !== this) {
 				return;
 			}
+			var elemid = $(this).attr("id");
+			var tunninid = elemid.split("/").join("");
+			if(tunninid < nyt) {
+				return;
+			}
 			$("#varausnappi").remove();
 			$(this).append("<button id=\"varausnappi\" class=\"btn btn-sm btn-success\">VARAA</button>");
-		})
+		});
 
 		$('.muokkaa').not('.spessu').click(
 				function() {
@@ -254,6 +307,10 @@
 		function tyhjennaVerho() {
 			$(".verho").hide();
 			$("#varausid, #varaajaetu, #varausotsikko, #varaajapuhelin, #varausalku, #varausloppu, #selite, #poistoloota").html("");
+		}
+		
+		function tyhjennaVarausverho() {
+			$(".varausverho").hide();
 		}
 		
 		function formatoiPaivays(input) {

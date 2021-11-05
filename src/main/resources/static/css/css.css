@@ -23,6 +23,13 @@ h1 {
 	color: #FFD5C2;
 }
 
+h3 {
+	text-transform: uppercase;
+	color: #588B8B;
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
 .poista {
 	display: inline-block;
 	background-color: red;
@@ -179,15 +186,22 @@ tr td.stay, tr.stay th {
 	text-align: center;
 }
 
-.verho {
+.verho, .varausverho {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(88, 139, 139, .8);
 	z-index: 10;
 	display: none;
+}
+
+.verho {
+	background-color: rgba(88, 139, 139, .8);
+}
+
+.varausverho {
+	background-color: rgba(255, 213, 194, .8);
 }
 
 .verhonsisalto {
@@ -273,7 +287,7 @@ tr td.stay, tr.stay th {
 	margin-top: 1em;
 }
 
-div#suljenappi {
+#suljenappi, #suljevaraus {
 	position: absolute;
 	right: 0.5em;
 	top: 0.5em;
@@ -281,15 +295,22 @@ div#suljenappi {
 	font-size: 1.5em;
 	display: flex;
 	height: 1em;
-	color:#C8553D;
-	cursor:pointer;
+	color: #C8553D;
+	cursor: pointer;
+}
+
+.wanha {
+	background-color: snow;
+	opacity: 0.2;
+	background-image: radial-gradient(#C8553D 1px, snow 1px);
+	background-size: 12px 10px;
 }
 
 #varausnappi {
-	width:100%;
-	height:100%;
-	position:relative;
-	z-index:1;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 1;
 }
 
 footer {
