@@ -54,13 +54,14 @@ public class Varaus {
 
 	public Varaus() {}
 
-	public Varaus(LocalDateTime alku, LocalDateTime loppu, String selitys, Kategoria kategoria) {
+	public Varaus(LocalDateTime alku, LocalDateTime loppu, String selitys, User user, Kategoria kategoria) {
 		super();
 		this.alku = alku;
 		this.loppu = loppu;
 		Duration dur = Duration.between(alku, loppu);
 		this.setKesto((double)dur.toMinutes() / 60);
 		this.selitys = selitys;
+		this.user = user;
 		this.kategoria = kategoria;
 	}
 	
@@ -71,6 +72,7 @@ public class Varaus {
 		Duration dur = Duration.between(alku, loppu);
 		this.setKesto((double)dur.toMinutes() / 60);
 		this.selitys = selitys;
+		this.user = null;
 		this.kategoria = null;
 	}
 

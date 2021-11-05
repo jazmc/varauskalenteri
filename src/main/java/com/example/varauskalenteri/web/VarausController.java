@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,11 +101,29 @@ public class VarausController {
 
 	// lisäyslomake /add
 	@PostMapping("/add")
-	public String postVaraus(LocalDateTime alku, LocalDateTime loppu, String varaaja, String selitys, String cat) {
-		// luodaan olio parametreinä saaduista string-muuttujista
+	public String postVaraus(String salku, String sloppu, String selitys, String u, String cat) {
+		TimeZone tz = TimeZone.getTimeZone("Europe/Helsinki");
+		int offset = tz.getOffset(new Date().getTime()) / 1000 / 60;
+		System.out.println(offset);
+		
+		// luodaan ldt oliot parametreinä saaduista string-muuttujista
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+		
+		LocalDateTime alku = LocalDateTime.parse(salku, formatter);
+		LocalDateTime loppu = LocalDateTime.parse(sloppu, formatter);
+		
+		//timezone
+		alku = alku.plusMinutes(offset);
+		loppu = loppu.plusMinutes(offset);
+		
+		System.out.println(salku + " / " + alku);
+		
+		// kaiva kategoria ja user
 		Optional<Kategoria> katsu = catrep.findById(Long.parseLong(cat));
 		Kategoria uusiKatsu = katsu.get();
-		Varaus uusvaraus = new Varaus(alku, loppu, selitys, uusiKatsu);
+		User user = urep.findByUsername(u);
+		
+		Varaus uusvaraus = new Varaus(alku, loppu, selitys, user, uusiKatsu);
 		// tallennus
 		repository.save(uusvaraus);
 		// uudelleenohjaus perussivulle
