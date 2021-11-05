@@ -1,0 +1,12 @@
+.ui-menu-item {
+	display:inline-block;
+}
+
+.ui-timepicker-container {
+	position:relative !important;
+	
+}
+
+.ui-timepicker, .ui-timepicker-viewport {
+	height:auto !important;
+}

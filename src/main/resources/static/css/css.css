@@ -235,7 +235,7 @@ tr td.stay, tr.stay th {
 	text-align: center;
 }
 
-.verhonsisalto table tr td:nth-child(odd) {
+.verhonsisalto table tr td:nth-child(odd), .ots {
 	text-transform: uppercase;
 	color: #C8553D;
 	font-weight: bold;
