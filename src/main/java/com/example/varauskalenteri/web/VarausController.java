@@ -46,13 +46,15 @@ public class VarausController {
 	// perussivu
 	@RequestMapping(value={"/index", "/varauskalenteri"})
 	public String varausList(Model model, @RequestParam(value = "v", required = false) String v, @RequestParam(value = "kk", required = false) String kk) {
-		// tehdään aina:
+		// varausten, kategorioiden ja nykyhetken modeliin lisäys tehdään aina:
 		model.addAttribute("varaukset", repository.findAll());
 		model.addAttribute("kategoriat", catrep.findAll());
+		model.addAttribute("nykyhetki", LocalDateTime.now());
 		
 		LocalDate kkeka;
 		int vikapv;
 		
+		// kuukausi- ja vuositiedot tai niiden puuttuminen
 		if (kk == null && v == null) { // tämä vuosi, tämä kuukausi
 			Calendar cal = Calendar.getInstance();
 			vikapv = cal.getActualMaximum(Calendar.DATE);
@@ -101,6 +103,7 @@ public class VarausController {
 	// lisäyslomake /add
 	@PostMapping("/add")
 	public String postVaraus(String salku, String sloppu, String selitys, String u, String cat) {
+		// lasketaan timezone offset UTC:sta
 		TimeZone tz = TimeZone.getTimeZone("Europe/Helsinki");
 		int offset = tz.getOffset(new Date().getTime()) / 1000 / 60;
 
@@ -110,7 +113,7 @@ public class VarausController {
 		LocalDateTime alku = LocalDateTime.parse(salku, formatter);
 		LocalDateTime loppu = LocalDateTime.parse(sloppu, formatter);
 		
-		//timezone
+		// aikavyöhykkeen korjaus UTC-offsetilla
 		alku = alku.plusMinutes(offset);
 		loppu = loppu.plusMinutes(offset);
 		
@@ -129,6 +132,7 @@ public class VarausController {
 	// varauksen muokkaus
 	@PostMapping("/edit")
 	public String editVaraus(String malku, String mloppu, String mselitys, Long mid) {
+		// lasketaan timezone offset UTC:sta
 		TimeZone tz = TimeZone.getTimeZone("Europe/Helsinki");
 		int offset = tz.getOffset(new Date().getTime()) / 1000 / 60;
 		
@@ -138,7 +142,7 @@ public class VarausController {
 		LocalDateTime alku = LocalDateTime.parse(malku, formatter);
 		LocalDateTime loppu = LocalDateTime.parse(mloppu, formatter);
 		
-		//timezone
+		// aikavyöhykkeen korjaus UTC-offsetilla
 		alku = alku.plusMinutes(offset);
 		loppu = loppu.plusMinutes(offset);
 
@@ -146,6 +150,7 @@ public class VarausController {
 		Optional<Varaus> muokattava = repository.findById(mid);
 		Varaus muoks = muokattava.get();
 		
+		// set-kutsut tietojen päivitystä varten
 		muoks.setAlku(alku);
 		muoks.setLoppu(loppu);
 		muoks.setSelitys(mselitys);

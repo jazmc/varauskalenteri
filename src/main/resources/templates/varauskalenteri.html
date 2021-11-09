@@ -146,7 +146,7 @@
 	<h1 th:inline="text">LENTOVARAUSKALENTERI</h1>
 	<div class="flex">
 	<p class="kayttajainfo">Tervetuloa, <b id="kayttis" th:attr="data-kayttaja=${#httpServletRequest.remoteUser}"></b>!<br>
-	Varauskalenteri päivitetty <span th:text="${#dates.format(#dates.createNow(),'dd.MM.yyyy HH:mm')}">Päivämäärä</span></p>
+	Varauskalenteri päivitetty <span th:text="${#temporals.format(nykyhetki,'dd.MM.yyyy HH:mm')}">Päivämäärä</span></p>
 	<form  style="display:inline-block;" th:action="@{/logout}" method="post">
 		<input type="submit" class="btn btn-outline-light" value="Kirjaudu ulos" />
 	</form>
@@ -183,6 +183,7 @@
 							<a class="btn btn-outline-light btn-sm" th:href="${#temporals.format(kkeka, 'MM')} eq 12 ? @{'?kk=1&v=' + ${#numbers.formatInteger(#temporals.year(kkeka)+1, 1)}} : @{'?kk=' + ${#numbers.formatInteger(#temporals.month(kkeka)+1, 1)} + '&v=' + ${#temporals.format(kkeka, 'yyyy')}}">Seuraava kuukausi <i class="fas fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
+				<i class="fas fa-arrow-down"></i> Päivä&nbsp; / &nbsp;Klo <i class="fas fa-arrow-right"></i>
 				</th>
 				<td class="flex">
 					<div th:each="i : ${#numbers.sequence(0, 23, 1)}"
