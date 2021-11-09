@@ -122,24 +122,29 @@
 		<table class="varauspohja">
 			<tr class="stay">
 				<th>
-		<div class="ylanamikat"><div class="vasenselektori"><a class="btn btn-outline-light btn-sm" th:href="${#temporals.format(kkeka, 'MM')} eq 1 ? @{'?kk=12&v=' + ${#numbers.formatInteger(#temporals.year(kkeka)-1, 1)}} : @{'?kk=' + ${#numbers.formatInteger(#temporals.month(kkeka)-1, 1)} + '&v=' + ${#temporals.format(kkeka, 'yyyy')}}"><i class="fas fa-arrow-circle-left"></i> Edellinen kuukausi</a></div>
-		<th:block th:switch="${#temporals.format(kkeka, 'MM')}">
-			<span th:case="1">Tammikuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="2">Helmikuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="3">Maaliskuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="4">Huhtikuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="5">Toukokuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="6">Kesäkuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="7">Heinäkuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="8">Elokuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="9">Syyskuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="10">Lokakuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="11">Marraskuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-			<span th:case="12">Joulukuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
-		</th:block>
-		
-		<div class="oikeaselektori"><a class="btn btn-outline-light btn-sm" th:href="${#temporals.format(kkeka, 'MM')} eq 12 ? @{'?kk=1&v=' + ${#numbers.formatInteger(#temporals.year(kkeka)+1, 1)}} : @{'?kk=' + ${#numbers.formatInteger(#temporals.month(kkeka)+1, 1)} + '&v=' + ${#temporals.format(kkeka, 'yyyy')}}">Seuraava kuukausi <i class="fas fa-arrow-circle-right"></i></a></div></div>
-				Päivä</th>
+					<div class="ylanamikat">
+						<div class="vasenselektori">
+							<a class="btn btn-outline-light btn-sm" th:href="${#temporals.format(kkeka, 'MM')} eq 1 ? @{'?kk=12&v=' + ${#numbers.formatInteger(#temporals.year(kkeka)-1, 1)}} : @{'?kk=' + ${#numbers.formatInteger(#temporals.month(kkeka)-1, 1)} + '&v=' + ${#temporals.format(kkeka, 'yyyy')}}"><i class="fas fa-arrow-circle-left"></i> Edellinen kuukausi</a>
+						</div>
+						<th:block th:switch="${#temporals.format(kkeka, 'MM')}">
+							<span th:case="1">Tammikuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="2">Helmikuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="3">Maaliskuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="4">Huhtikuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="5">Toukokuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="6">Kesäkuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="7">Heinäkuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="8">Elokuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="9">Syyskuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="10">Lokakuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="11">Marraskuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+							<span th:case="12">Joulukuu [[${#temporals.format(kkeka, 'yyyy')}]]</span>
+						</th:block>
+						<div class="oikeaselektori">
+							<a class="btn btn-outline-light btn-sm" th:href="${#temporals.format(kkeka, 'MM')} eq 12 ? @{'?kk=1&v=' + ${#numbers.formatInteger(#temporals.year(kkeka)+1, 1)}} : @{'?kk=' + ${#numbers.formatInteger(#temporals.month(kkeka)+1, 1)} + '&v=' + ${#temporals.format(kkeka, 'yyyy')}}">Seuraava kuukausi <i class="fas fa-arrow-circle-right"></i></a>
+						</div>
+					</div>
+				</th>
 				<td class="flex">
 					<div th:each="i : ${#numbers.sequence(0, 23, 1)}"
 						th:text="${#numbers.formatInteger(i,2)}"></div>
@@ -215,7 +220,12 @@
 		
 		$('.lentovaraus, .huolto').mouseout(function() {
 			var varauksenid = $(this).attr("rel");
-			$('div[rel='+varauksenid+']').css('opacity', '.9');
+			if ($(this).parent().is(".wanha")) {
+				$('div[rel='+varauksenid+']').css('opacity', '.6');
+			} else {
+				$('div[rel='+varauksenid+']').css('opacity', '.9');
+			}
+
 		});
 
 		$('.lentovaraus, .huolto').click(function() {
@@ -354,7 +364,9 @@
 		}
 		
 		function naytaVaraus(data) {
-			if (kayttis == data.user.username || kayttis == "admin") {
+			var loppuolio = new Date(data.loppu);
+			var onkovanha = hetki > loppuolio;
+			if ((kayttis == data.user.username || kayttis == "admin") && !onkovanha) {
 				$("#poistoloota").append("<div><button class=\"btn btn-outline-primary\"/>Muokkaa varausta</button> <button class=\"btn btn-outline-danger\" onclick=\"vahvistaPoisto()\"/>Poista varaus</button></div>")
 			}
 			$("#varausid").html(data.id);
@@ -428,6 +440,7 @@
 		  $( function kutsuPickeria() {
 			    $( ".datepicker" ).datepicker({ minDate: -0, maxDate: "+2Y", onSelect: function(e) { if (vahtaaKestoa(e) == false && e != null) { $(this).datepicker("setDate", null) }} });
 			    $( ".datepicker" ).datepicker( "option", "showAnim", "fadeIn" );
+			    $( ".datepicker" ).datepicker( "option", "firstDay", 1 );
 			    $( ".datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
 			  } );
 			  

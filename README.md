@@ -1,5 +1,8 @@
 # varauskalenteri
 ## Palvelinohjelmointi 2021 harjoitustyö
+
+*Java + Spring Boot + Thymeleaf + jQuery -verkkosovellus*
+
 -------
 
 Sovellus pyörii livenä osoitteessa https://varauskalenteri.herokuapp.com
