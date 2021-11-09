@@ -94,7 +94,6 @@ public class VarausController {
 			
 		}
 		// return .html
-		System.out.println(kkeka);
 		return "varauskalenteri";
 	}
 	
@@ -104,8 +103,7 @@ public class VarausController {
 	public String postVaraus(String salku, String sloppu, String selitys, String u, String cat) {
 		TimeZone tz = TimeZone.getTimeZone("Europe/Helsinki");
 		int offset = tz.getOffset(new Date().getTime()) / 1000 / 60;
-		System.out.println(offset);
-		
+
 		// luodaan ldt oliot parametreinä saaduista string-muuttujista
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 		
@@ -115,8 +113,6 @@ public class VarausController {
 		//timezone
 		alku = alku.plusMinutes(offset);
 		loppu = loppu.plusMinutes(offset);
-		
-		System.out.println(salku + " / " + alku);
 		
 		// kaiva kategoria ja user
 		Optional<Kategoria> katsu = catrep.findById(Long.parseLong(cat));
@@ -130,37 +126,32 @@ public class VarausController {
 		return "redirect:/varauskalenteri";
 	}
 	
-	@GetMapping("/edit/{id}/{thing}/{val}")
-	public String editVaraus(@PathVariable String val, @PathVariable String thing, @PathVariable String id) {
-		// id string longiksi
-		long iidee = Long.parseLong(id);
+	// varauksen muokkaus
+	@PostMapping("/edit")
+	public String editVaraus(String malku, String mloppu, String mselitys, Long mid) {
+		TimeZone tz = TimeZone.getTimeZone("Europe/Helsinki");
+		int offset = tz.getOffset(new Date().getTime()) / 1000 / 60;
 		
-		Optional<Varaus> paivitettava = repository.findById(iidee);
-		Varaus paivitettavaVaraus = paivitettava.get();
+		// luodaan ldt oliot parametreinä saaduista string-muuttujista
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime alku = LocalDateTime.parse(malku, formatter);
+		LocalDateTime loppu = LocalDateTime.parse(mloppu, formatter);
 		
-		switch(thing) {
-			case "kategoria":
-				Optional<Kategoria> katsu = catrep.findById(Long.parseLong(val));
-				Kategoria uusiKatsu = katsu.get();
-				paivitettavaVaraus.setKategoria(uusiKatsu);
-				break;
-			case "alku":
-				LocalDateTime dateTime = LocalDateTime.parse(val, formatter);
-				paivitettavaVaraus.setAlku(dateTime);
-				break;
-			case "loppu":
-				LocalDateTime dateTime2 = LocalDateTime.parse(val, formatter);
-				paivitettavaVaraus.setLoppu(dateTime2);
-				break;
-			case "selitys":
-				paivitettavaVaraus.setSelitys(val);
-				break;
-		}
+		//timezone
+		alku = alku.plusMinutes(offset);
+		loppu = loppu.plusMinutes(offset);
+
+		// etsitään varaus
+		Optional<Varaus> muokattava = repository.findById(mid);
+		Varaus muoks = muokattava.get();
 		
-		repository.save(paivitettavaVaraus);
+		muoks.setAlku(alku);
+		muoks.setLoppu(loppu);
+		muoks.setSelitys(mselitys);
 		
+		repository.save(muoks);
+
 		// uudelleenohjaus perussivulle
 		return "redirect:/varauskalenteri";
 	}

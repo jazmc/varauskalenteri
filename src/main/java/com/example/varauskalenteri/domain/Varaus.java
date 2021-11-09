@@ -90,6 +90,9 @@ public class Varaus {
 
 	public void setAlku(LocalDateTime alku) {
 		this.alku = alku;
+		LocalDateTime tempLoppu = this.getLoppu();
+		Duration dur = Duration.between(alku, tempLoppu);
+		this.setKesto((double)dur.toMinutes() / 60);
 	}
 
 	public LocalDateTime getLoppu() {
@@ -98,6 +101,9 @@ public class Varaus {
 
 	public void setLoppu(LocalDateTime loppu) {
 		this.loppu = loppu;
+		LocalDateTime tempAlku = this.getAlku();
+		Duration dur = Duration.between(tempAlku, loppu);
+		this.setKesto((double)dur.toMinutes() / 60);
 	}
 
 	public String getSelitys() {

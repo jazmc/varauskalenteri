@@ -31,30 +31,69 @@
 		<div class="verhonsisalto">
 			<div id="varausid" style="display:none"></div>
 			<div id="suljenappi"><i class="fas fa-times-circle"></i></div>
-			<table>
-				<tr>
-					<th id="varausotsikko" colspan="4"></th>
-				</tr>
-				<tr>
-					<td class="ots">Alkaa</td>
-					<td id="varausalku"></td>
-					<td class="ots">Päättyy</td>
-					<td id="varausloppu"></td>
-				</tr>
-				<tr>
-					<td class="ots">Lisätiedot</td>
-					<td colspan="3" id="selite"></td>
-				</tr>
-				<tr>
-					<th colspan="4">Varaajan tiedot</th>
-				</tr>
-				<tr>
-					<td class="ots">Nimi</td>
-					<td id="varaajaetu"></td>
-					<td class="ots">Yhteystiedot</td>
-					<td id="varaajapuhelin"></td>
-				</tr>
-			</table>
+			<div id="varaustable">
+				<table>
+					<tr>
+						<th id="varausotsikko" colspan="4"></th>
+					</tr>
+					<tr>
+						<td class="ots">Alkaa</td>
+						<td id="varausalku"></td>
+						<td class="ots">Päättyy</td>
+						<td id="varausloppu"></td>
+					</tr>
+					<tr>
+						<td class="ots">Lisätiedot</td>
+						<td colspan="3" id="selite"></td>
+					</tr>
+					<tr>
+						<th colspan="4">Varaajan tiedot</th>
+					</tr>
+					<tr>
+						<td class="ots">Nimi</td>
+						<td id="varaajaetu"></td>
+						<td class="ots">Yhteystiedot</td>
+						<td id="varaajapuhelin"></td>
+					</tr>
+				</table>
+			</div>
+			<div id="muokkaustable" style="display:none;">
+				<form id="muokkausform" th:action="@{/edit}" method="post">
+					<input id="mid" type="hidden" name="mid" value=""/>
+					<input id="malku" type="hidden" name="malku" value=""/>
+					<input id="mloppu" type="hidden" name="mloppu" value=""/>
+					<table>
+						<tr>
+							<th colspan="2">Varaus alkaa</th>
+							<th colspan="2">Varaus päättyy</th>
+						</tr>
+						<tr>
+							<td>Pvm.</td>
+							<td id="malkupv"><input type="text" id="malkudate" class="datepicker" size="30"></td>
+							<td class="ots">Pvm.</td>
+							<td id="mloppupv"><input type="text" id="mloppudate" class="datepicker" size="30"></td>
+						</tr>
+						<tr>
+							<td>Klo.</td>
+							<td id="malkuh"><input type="text" style="width: 100%" id="malkupicker" class="timepickerit" value="13:30"></td>
+							<td class="ots">Klo.</td>
+							<td id="mloppuh"><input type="text" style="width: 100%" id="mloppupicker" class="timepickerit" value="13:30"></td>
+						</tr>
+						<tr>
+							<td>Kuvaus</td>
+							<td colspan="3">
+								<textarea style="width:100%; height:4em;" id="mvarauksenkuvaus" name="mselitys" placeholder="esim. Reitti, lennon tyyppi, ..."></textarea>
+							</td>
+						</tr>
+					</table>
+					<div class="conttinen"></div>
+					<div class="mvalitusloota"><i>Varauksen minimikesto on yksi (1) tunti.<br>
+					Järjestelmä ei huomioi varausten päällekkäisyyksiä. Tarkistathan muokkauksia tehdessäsi, että kone on vapaana koko varauksesi ajalle.</i></div>
+					<br>
+					<button type="button" class="btn btn-outline-success" id="tallennamuutokset">Tallenna muutokset</button>
+					<button type="button" class="btn btn-outline-danger" id="peruutamuutokset">Peruuta</button>
+				</form>
+			</div>
 			<div id="poistoloota"></div>
 		</div>
 	</div>
@@ -184,7 +223,8 @@
 		var hetki = new Date();
 		var nytten = [hetki.getFullYear(), hetki.getMonth()+1, hetki.getDate(), hetki.getHours()];
 		var nyt = [];
-		var koskettu = false;
+		var koskettu, muokataan = false;
+		// lisätään vanhoille tunneille .wanha class sivunlatauksen yhteydessä
 		var suoritaladatessa = function() {
 			for(var k of nytten) {
 				if (k < 10) {
@@ -205,14 +245,15 @@
 		
 		suoritaladatessa();
 		
+		// värit varauksille ja huolloille
 		$('.huolto').css('background-color', '#baa29d');
-		
 		$('.lentovaraus').each(function(){
 			var varijono = ['#DAB5FF', '#ffb593', '#b3f0c8', '#ff93d5', '#93daff', '#ff9393', '#a293ff', '#fffb93'];
 			var varaajanid = $(this).attr("data-varaaja");
 			$(this).css('background-color', varijono[varaajanid-1]);
 		});
 		
+		// hover-simulointi; nitoo yhteen kaikki samaan varaukseen liittyvät divit
 		$('.lentovaraus, .huolto').mouseover(function() {
 			var varauksenid = $(this).attr("rel");
 			$('div[rel='+varauksenid+']').css('opacity', '1');
@@ -228,18 +269,27 @@
 
 		});
 
+		// jos klikattu varausta, hae varauksen tiedot
 		$('.lentovaraus, .huolto').click(function() {
 			var varauksenid = $(this).attr("rel");
 			haeVaraus(varauksenid);
 		});
 		
-		$(".verho, #suljenappi i").click(function(e) {
+		// tyhjennä & piilota jos klikattu jotain näistä
+		$(".verho, #suljenappi i, #peruutamuutokset").click(function(e) {
 			if(e.target !== this) {
 				return;
 			}
 			tyhjennaVerho();
+			$("#varaustable").show();
+			// muokkausikkunan tyhjäys
+			muokataan = false;
+			$("#muokkaustable").hide();
+			$("#malkudate, #mloppudate").datepicker("setDate", null);
+			$("malkupicker, #mloppupicker").val(null);
 		});
 		
+		// tyhjennä & piilota jos klikattu jotain näistä
 		$(".varausverho, #suljevaraus i, #peruutavaraus").click(function(e) {
 			if(e.target !== this) {
 				return;
@@ -258,9 +308,11 @@
 			var alkupv = $(this).parent().attr("id").split("/")[2];
 			var alkuh = $(this).parent().attr("id").split("/")[3];
 			
+			// datepickerin alustus klikatun päivän perusteella
 			$( "#alkudate" ).datepicker( "setDate", alkupv + "." + alkukk + "." + alkuv );
 			$( "#loppudate" ).datepicker( "setDate", alkupv + "." + alkukk + "." + alkuv );
 			
+			// timepickerin alustus klikatun tunnin perusteella
 			var aika = alkupv + "." + alkukk + "." + alkuv + " " + alkuh + ":30";
 			if ($( "div[data-loppu='" + aika + "']").length > 0) {
 				$( "#alkupicker" ).val( alkuh + ":30" );
@@ -272,12 +324,15 @@
 
 		});
 		
+		// tuntisolun klikkifunktio
 		$(".tunti").not(':parent').click(function(e) {
+			// älä suorita funktiota jos klikattu jotain child-elementtiä
 			if(e.target !== this) {
 				return;
 			}
 			var elemid = $(this).attr("id");
 			var tunninid = elemid.split("/").join("");
+			// jos tunti on jo mennyt, älä suorita loppuja
 			if(tunninid < nyt) {
 				return;
 			}
@@ -289,48 +344,16 @@
 			} else {
 				$(this).append("<button id=\"varausnappi\" class=\"btn btn-sm btn-success\">VARAA</button>");
 			}
-			
+		});
+		
+		// muokkausnapin klikkifunktio
+		$(document).on('click', '#muokkaavarausta', function(e){
+			$("#poistoloota").html("");
+			$("#varaustable").hide();
+			$("#muokkaustable").show();
+			muokataan = true;
 		});
 
-		$('.muokkaa').not('.spessu').click(
-				function() {
-					var asia = $(this).attr('rel');
-					var id = $(this).attr('name');
-					var value = $('#' + asia + id).attr('contenteditable');
-
-					if (value == "false") {
-						$("#" + asia + id).attr('contenteditable', 'true');
-						$("span").not("#" + asia + id).attr('contenteditable',
-								'false');
-						$(this).html('<i class="far fa-save"></i>');
-						$('.muokkaa').not(this).html(
-								'<i class="far fa-edit"></i>');
-					} else {
-						var arvo = $("#" + asia + id).text();
-						window.location.href = '/edit/' + id + '/' + asia + '/'
-								+ arvo;
-					}
-				});
-		$('.spessu').click(
-				function() {
-
-					var asia = $(this).attr('rel');
-					var id = $(this).attr('name');
-					var value = $(this).html();
-
-					if (value.indexOf("edit") > 0) {
-						$("#catlist" + id).css("display", "inline-block");
-						$("#category" + id).hide();
-						$(this).html('<i class="far fa-save"></i>');
-					} else {
-						var arvo = $("#catlist" + id).val();
-						if (arvo != "" && arvo != null) {
-							window.location.href = '/edit/' + id + '/' + asia
-									+ '/' + arvo;
-						}
-					}
-
-				});
 		function haeVaraus(id) {
 			$.ajax({
 			    url: "/varaukset/"+id,
@@ -364,16 +387,38 @@
 		}
 		
 		function naytaVaraus(data) {
+			// verrataan onko varauksen loppuaika jo mennyt
 			var loppuolio = new Date(data.loppu);
 			var onkovanha = hetki > loppuolio;
+			
+			// jos varaus ei ole vanha, tulosta muokkaus- ja poistopainike jos valtuudet riittää
 			if ((kayttis == data.user.username || kayttis == "admin") && !onkovanha) {
-				$("#poistoloota").append("<div><button class=\"btn btn-outline-primary\"/>Muokkaa varausta</button> <button class=\"btn btn-outline-danger\" onclick=\"vahvistaPoisto()\"/>Poista varaus</button></div>")
+				$("#poistoloota").append("<div><button class=\"btn btn-outline-primary\" id=\"muokkaavarausta\">Muokkaa varausta</button> <button class=\"btn btn-outline-danger\" onclick=\"vahvistaPoisto()\">Poista varaus</button></div>")
 			}
+			// täytetään muokkausikkuna
+			$("#mid").val(data.id);
+			// muokkaus-datepickerin alustus varauksen päivän perusteella
+			var alkud = new Date(data.alku);
+			var loppud = new Date(data.loppu);
+			$( "#malkudate" ).datepicker( "setDate", alkud );
+			$( "#mloppudate" ).datepicker( "setDate", loppud );
+			
+			// muuokkaus-timepickerin alustus varauksen tunnin perusteella
+			var varausah = alkud.getHours();
+			var varausamin = alkud.getMinutes();
+			var varauslh = loppud.getHours();
+			var varauslmin = loppud.getMinutes();
+				$( "#malkupicker" ).val( varausah + ":" + (varausamin<10?'0':'') + varausamin );
+				$( "#mloppupicker" ).val( varauslh + ":" + (varauslmin<10?'0':'') + varauslmin );
+			
+			
+			// sijoitetaan varauksen tiedot paikoilleen ja feidataan ikkuna näkyviin
 			$("#varausid").html(data.id);
 			$("#varausotsikko").append("<span>"+ data.kategoria.name +"</span>");
 			$("#varaajaetu").append("<span>" + data.user.etunimi + " " + data.user.sukunimi + "</span>")
 			$("#varaajapuhelin").append("<span>p. " + data.user.phone + ", " + data.user.email + "</span>")
 			$("#selite").append("<span>" + data.selitys + "</span>")
+			$("#mvarauksenkuvaus").val(data.selitys); // muokkausikkunaan
 			var valku = formatoiPaivays(data.alku);
 			var vloppu = formatoiPaivays(data.loppu);
 			$("#varausalku").append("<span>" + valku + "</span>");
@@ -381,11 +426,13 @@
 			$(".verho").fadeIn();
 		}
 		
+		// tyhjennysfunktio varauksen tarkasteluikkunalle
 		function tyhjennaVerho() {
 			$(".verho").hide();
 			$("#varausid, #varaajaetu, #varausotsikko, #varaajapuhelin, #varausalku, #varausloppu, #selite, #poistoloota").html("");
 		}
 		
+		// tyhjennysfunktio varauksen lisäysikkunalle
 		function tyhjennaVarausverho() {
 			$(".varausverho").hide();
 		}
@@ -407,10 +454,9 @@
 			}
 		}
 		
-
+		// vahtifunktio sille ettei varauksen loppu voi olla ennen alkua
 		function vahtaaKestoa(val) {
 			if (koskettu == true) {
-				console.log(val);
 				var alkupaiva = $( "#alkudate" ).datepicker( "getDate" );
 				var loppupaiva = $( "#loppudate" ).datepicker( "getDate" );
 				var alkutunnit = $( "#alkupicker" ).val();
@@ -426,7 +472,7 @@
 					alert("Varauksen loppu ei voi olla ennen sen alkua!\nMuokkaa äsken antamaasi arvoa.");
 					$("#vahvistavaraus").prop("disabled", true);
 					return false;
-				} else if ((loppupaiva-alkupaiva)/1000/60 < 60) {
+				} else if ((loppupaiva-alkupaiva)/1000/60 < 60) { // jos kesto alle 1h
 					alert("Varauksen minimikesto on 1 tunti! Muokkaa äsken antamaasi arvoa.");
 					$("#vahvistavaraus").prop("disabled", true);
 					return false;
@@ -434,16 +480,43 @@
 					$("#vahvistavaraus").prop("disabled", false);
 					return true;
 				}
+			} else if (muokataan == true) {
+				var alkupaiva = $( "#malkudate" ).datepicker( "getDate" );
+				var loppupaiva = $( "#mloppudate" ).datepicker( "getDate" );
+				var alkutunnit = $( "#malkupicker" ).val();
+				var lopputunnit = $( "#mloppupicker" ).val();
+				let [ahour, aminute] = alkutunnit.split(':');
+				let [lhour, lminute] = lopputunnit.split(':');
+				alkupaiva.setHours(ahour);
+				alkupaiva.setMinutes(aminute);
+				loppupaiva.setHours(lhour);
+				loppupaiva.setMinutes(lminute);
+				
+				if(loppupaiva < alkupaiva) {
+					alert("Varauksen loppu ei voi olla ennen sen alkua!\nMuokkaa äsken antamaasi arvoa.");
+					$("#tallennamuutokset").prop("disabled", true);
+					return false;
+				} else if ((loppupaiva-alkupaiva)/1000/60 < 60) { // jos kesto alle 1h
+					alert("Varauksen minimikesto on 1 tunti! Muokkaa äsken antamaasi arvoa.");
+					$("#tallennamuutokset").prop("disabled", true);
+					return false;
+				} else {
+					$("#tallennamuutokset").prop("disabled", false);
+					return true;
+				}
 			}
 			
 		}
-		  $( function kutsuPickeria() {
-			    $( ".datepicker" ).datepicker({ minDate: -0, maxDate: "+2Y", onSelect: function(e) { if (vahtaaKestoa(e) == false && e != null) { $(this).datepicker("setDate", null) }} });
-			    $( ".datepicker" ).datepicker( "option", "showAnim", "fadeIn" );
-			    $( ".datepicker" ).datepicker( "option", "firstDay", 1 );
-			    $( ".datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
-			  } );
-			  
+		// datepicker alustus
+		function kutsuPickeria() {
+		    $( ".datepicker" ).datepicker({ minDate: -0, maxDate: "+2Y", onSelect: function(e) { if (vahtaaKestoa(e) == false && e != null) { $(this).datepicker("setDate", null) }} });
+		    $( ".datepicker" ).datepicker( "option", "showAnim", "fadeIn" );
+		    $( ".datepicker" ).datepicker( "option", "firstDay", 1 );
+		    $( ".datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
+		}
+		kutsuPickeria();
+		  
+		// timepicker alustus
 		$('.timepickerit').timepicker({
 		    timeFormat: 'HH:mm',
 		    interval: 30,
@@ -456,6 +529,7 @@
 		    change: function(e) { if (vahtaaKestoa(e) == false && e != null) { $(this).val(null) }}
 		});
 		
+		// add: varauksen muuntaminen tietokantaan lähetystä varten
 		$("#vahvistavaraus").click(function(){
 			var alkudeitti = new Date();
 			var alkuarvo = $("#alkudate").datepicker( "getDate" );
@@ -468,9 +542,33 @@
 			alkudeitti.setHours(alkutiima.getHours(), alkutiima.getMinutes(), 0, 0);
 			loppudeitti.setFullYear(loppuarvo.getFullYear(), loppuarvo.getMonth(), loppuarvo.getDate());
 			loppudeitti.setHours(lopputiima.getHours(), lopputiima.getMinutes(), 0, 0);
+			
+			// muunnetut arvot lopullisiin kenttiin
 			$("#salku").val(alkudeitti.toISOString());
 			$("#sloppu").val(loppudeitti.toISOString());
+			
 			$("#varausform").submit();
+		});
+		
+		// edit: varauksen muuntaminen tietokantaan lähetystä varten
+		$("#tallennamuutokset").click(function(){
+			var alkudeitti = new Date();
+			var alkuarvo = $("#malkudate").datepicker( "getDate" );
+			var alkutiima = $("#malkupicker").timepicker( "getTime" );
+			var loppudeitti = new Date();
+			var loppuarvo = $("#mloppudate").datepicker( "getDate" );
+			var lopputiima = $("#mloppupicker").timepicker("getTime");
+			
+			alkudeitti.setFullYear(alkuarvo.getFullYear(), alkuarvo.getMonth(), alkuarvo.getDate());
+			alkudeitti.setHours(alkutiima.getHours(), alkutiima.getMinutes(), 0, 0);
+			loppudeitti.setFullYear(loppuarvo.getFullYear(), loppuarvo.getMonth(), loppuarvo.getDate());
+			loppudeitti.setHours(lopputiima.getHours(), lopputiima.getMinutes(), 0, 0);
+			
+			// muunnetut arvot lopullisiin kenttiin
+			$("#malku").val(alkudeitti.toISOString());
+			$("#mloppu").val(loppudeitti.toISOString());
+			
+			$("#muokkausform").submit();
 		});
 	</script>
 </body>
