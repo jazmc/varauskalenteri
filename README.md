@@ -10,11 +10,12 @@ Sovellus pyörii livenä osoitteessa https://varauskalenteri.herokuapp.com
 ### Kirjautuminen
 * Testiadmin **admin**, salasana admin
 * Testikäyttäjät **user**, **user1**, **user2**, **user3**, kaikkien näiden salasana user
+* Rekisteröityminen on mahdollista lomakkeella
 
 ### Ominaisuuksia
 * Lentovarauksia voi tehdä vain nykyhetkeen tai tulevaisuuteen
 * Lentovarauksen minimikesto on 1 h, kestoa säädetään puolen tunnin inkrementeissä
-* [TODO:] Tavallinen "user" voi tehdä vain *lentovaraus*-kategorian varauksia, "admin" voi tehdä myös *huolto*-varauksia
+* Tavallinen "user" voi tehdä vain *lentovaraus*-kategorian varauksia, "admin" voi tehdä myös *huolto*-varauksia
 * Tavallinen "user" voi muokata ja poistaa vain omia varauksiaan, "admin" voi muokata ja poistaa kaikkia
 * Jos kalenterihetkellä on varaus joka päättyy puolituntiseen, järjestelmä ehdottaa aloitusta puolituntisesta
 * Varaukset on värikoodattu (huolto on harmaa, loput väritetään user-id:n mukaan)
