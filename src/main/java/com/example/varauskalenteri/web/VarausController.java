@@ -203,6 +203,9 @@ public class VarausController {
 		// aikavyöhykkeen korjaus UTC-offsetilla
 		alku = alku.plusMinutes(offset);
 		loppu = loppu.plusMinutes(offset);
+		
+		int kk = alku.getMonthValue();
+		int vuos = alku.getYear();
 
 		// etsitään varaus
 		Optional<Varaus> muokattava = repository.findById(mid);
@@ -216,7 +219,7 @@ public class VarausController {
 		repository.save(muoks);
 
 		// uudelleenohjaus perussivulle
-		return "redirect:/varauskalenteri";
+		return "redirect:/varauskalenteri?kk="+kk+"&v="+vuos;
 	}
 	
 	// REST hae varaukset
@@ -242,9 +245,18 @@ public class VarausController {
 	public String deleteVaraus(@PathVariable String no) {
 		// string longiksi
 		long id = Long.parseLong(no);
+		
+		// varmistetaan takaisinohjaus sopivaan kuukausinäkymään
+		Optional<Varaus> poistettava = repository.findById(id);
+		Varaus poist = poistettava.get();
+		LocalDateTime alku = poist.getAlku();
+		int kk = alku.getMonthValue();
+		int vuos = alku.getYear();	
+		
 		// poisto
 		repository.deleteById(id);
+		
 		// uudelleenohjaus perussivulle
-		return "redirect:/varauskalenteri";
+		return "redirect:/varauskalenteri?kk="+kk+"&v="+vuos;
 	}
 }
