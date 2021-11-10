@@ -172,6 +172,9 @@ public class VarausController {
 		alku = alku.plusMinutes(offset);
 		loppu = loppu.plusMinutes(offset);
 		
+		int kk = alku.getMonthValue();
+		int vuos = alku.getYear();
+		
 		// kaiva kategoria ja user
 		Optional<Kategoria> katsu = catrep.findById(Long.parseLong(cat));
 		Kategoria uusiKatsu = katsu.get();
@@ -181,7 +184,7 @@ public class VarausController {
 		// tallennus
 		repository.save(uusvaraus);
 		// uudelleenohjaus perussivulle
-		return "redirect:/varauskalenteri";
+		return "redirect:/varauskalenteri?kk="+kk+"&v="+vuos;
 	}
 	
 	// varauksen muokkaus
