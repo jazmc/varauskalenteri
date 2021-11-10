@@ -317,6 +317,7 @@ tr td.stay, tr.stay th {
 	max-width:900px;
 	margin:0 auto;
 	text-align:center;
+    padding-bottom: 3em;
 }
 
 #varausnappi {

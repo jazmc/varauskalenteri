@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
 
-import org.hibernate.internal.build.AllowSysOut;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.varauskalenteri.domain.Varaus;
 import com.example.varauskalenteri.domain.VarausRepository;
+
+import com.example.varauskalenteri.domain.SignupForm;
+
 import com.example.varauskalenteri.domain.Kategoria;
 import com.example.varauskalenteri.domain.KategoriaRepository;
 import com.example.varauskalenteri.domain.User;
@@ -38,12 +43,63 @@ public class VarausController {
 	@Autowired
 	private UserRepository urep;
 	
+	// oletussivu = sisäänkirjautuminen / rekisteröinti
     @RequestMapping(value="/login")
-    public String login() {	
+    public String login(Model model) {	
+    	model.addAttribute("reklomake", new SignupForm());
         return "kirjaudu";
     }
+    
+    // rekisteröintilomakkeen postaus
+	@PostMapping("/register")
+    public String rekisteroidy(@Valid @ModelAttribute("reklomake") SignupForm signupForm, BindingResult bindingResult) {
+		System.out.println("saatu username: " + signupForm.getUsername());
+		// kentissä ei ole virheitä
+    	if (!bindingResult.hasErrors()) {
+    		System.out.println("Kentistä ei löytynyt virheitä");
+    		// tsekataan että passwordit mätsää
+    		if (signupForm.getPassword().equals(signupForm.getPasswordCheck())) {
+    			System.out.println("Salasanat täsmäsi");
+	    		String salis = signupForm.getPassword();
+		    	BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+		    	String hashPwd = bc.encode(salis);
+		    	
+		    	String uname = signupForm.getUsername();
+		    	String etu = signupForm.getEtunimi();
+		    	String suku = signupForm.getSukunimi();
+		    	String email = signupForm.getEmail();
+		    	String puh = signupForm.getPuhelin();
+		    	String rooli = "USER";
+		    	// luodaan käyttäjäolio ja sille tiedot
+		    	User uusKayttaja = new User(uname, etu, suku, hashPwd, email, puh, rooli);
+		    	
+		    	// jos käyttäjää ei vielä ole olemassa
+		    	if (urep.findByUsername(signupForm.getUsername()) == null) {
+		    		System.out.println("Käyttäjää ei ollut vielä olemassa");
+		    		urep.save(uusKayttaja);
+		    		
+		    	// jos käyttäjä on jo tietokannassa
+		    	} else {
+		    		System.out.println("Käyttäjä oli jo tietokannassa");
+	    			bindingResult.rejectValue("username", "err.username", "Käyttäjänimi on jo käytössä. Valitse toinen.");    	
+	    			return "redirect:/login?userexists";		    		
+		    	}
+		    // jos passwordit ei mätsänny
+    		} else {
+    			System.out.println("Passwordit ei mätsänny");
+    			bindingResult.rejectValue("passwordCheck", "err.passCheck", "Salasanat eivät ole yhtäläiset.");    	
+    			return "redirect:/login?passworderror";
+    		}
+    	// kentissä on virheitä
+    	} else {
+    		System.out.println("Kentissä on virheitä");
+    		System.out.println(bindingResult.getAllErrors());
+    		return "redirect:/login?fielderrors";
+    	}
+    	return "redirect:/login?success";  
+	}
 
-	// perussivu
+	// perussivu "varauskalenterisivu"
 	@RequestMapping(value={"/index", "/varauskalenteri"})
 	public String varausList(Model model, @RequestParam(value = "v", required = false) String v, @RequestParam(value = "kk", required = false) String kk) {
 		// varausten, kategorioiden ja nykyhetken modeliin lisäys tehdään aina:

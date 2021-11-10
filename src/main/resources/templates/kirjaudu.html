@@ -50,6 +50,8 @@ input {
 	font-family: 'Anonymous Pro', monospace;
 	font-weight: bold;
 }
+
+footer {color:rgba(200, 85, 61, .3);}
 </style>
 </head>
 <body>
@@ -60,77 +62,100 @@ input {
 			Väärä käyttäjätunnus / salasana.<br>
 			<br>
 		</div>
+		<div th:if="${param.success}">
+			Kiitos rekisteröitymisestä! Voit nyt kirjautua sisään tunnuksillasi.<br>
+			<br>
+		</div>
+		<div th:if="${param.fielderrors}">
+			Kentissä oli virheitä. Noudatathan seuraavia rajoituksia:<br>
+			<ul>
+				<li>Käyttäjänimi 5-30 merkkiä</li>
+				<li>Salasana 4-30 merkkiä</li>
+				<li>Etunimi 2-30 merkkiä</li>
+				<li>Sukunimi 1-30 merkkiä</li>
+				<li>Sähköposti 5-50 merkkiä</li>
+				<li>Puhelin 7-20 merkkiä</li>
+			</ul>
+			<br>
+		</div>
+		<div th:if="${param.userexists}">
+			Valitettavasti käyttäjätunnus oli jo varattu. Yritä rekisteröitymistä uudelleen eri käyttäjänimellä.<br>
+			<br>
+		</div>
+		<div th:if="${param.passworderror}">
+			Salasanat eivät täsmänneet keskenään. Yritä rekisteröitymistä uudelleen.<br>
+			<br>
+		</div>
 		<form th:action="@{/login}" method="post">
-			<div class="input-group mb-3">
-				<span class="input-group-text" id="inputGroup-sizing-default"
-					style="width: 30%">Käyttäjätunnus</span> <input type="text"
-					name="username" class="form-control" aria-label="Käyttäjätunnus"
-					aria-describedby="inputGroup-sizing-default" required>
-			</div>
-			<div class="input-group mb-3">
-				<span class="input-group-text" id="inputGroup-sizing-default"
-					style="width: 30%">Salasana</span> <input type="password"
-					name="password" class="form-control" aria-label="Salasana"
-					aria-describedby="inputGroup-sizing-default" required>
+			<div id="kirjaudu">
+				<div class="input-group mb-3">
+					<span class="input-group-text" id="inputGroup-sizing-default"
+						style="width: 30%">Käyttäjätunnus</span> <input type="text"
+						name="username" class="form-control" aria-label="Käyttäjätunnus"
+						aria-describedby="inputGroup-sizing-default" required>
+				</div>
+				<div class="input-group mb-3">
+					<span class="input-group-text" id="inputGroup-sizing-default"
+						style="width: 30%">Salasana</span> <input type="password"
+						name="password" class="form-control" aria-label="Salasana"
+						aria-describedby="inputGroup-sizing-default" required>
+				</div>
 			</div>
 			<div class="d-grid gap-2">
-				<input type="submit" class="btn btn-success" value="Kirjaudu sisään" />
-				<input type="button" class="btn btn-secondary btn-sm"
-					value="Rekisteröidy" onclick="$('#rekisterointi').slideDown();" />
+				<input type="submit" id="kirjaudusisaan" class="btn btn-success" value="Kirjaudu sisään" />
+				<input type="button" id="rekisteroidy" class="btn btn-secondary btn-sm"
+					value="Rekisteröidy"/>
 			</div>
 		</form>
 		<div id="rekisterointi">
 			<h2>&#128101; Rekisteröidy järjestelmään &#128101;</h2>
-			<form th:action="@{/register}" method="post">
+			<form th:object="${reklomake}" th:action="@{/register}" method="post">
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
-						style="width: 30%">Käyttäjätunnus</span> <input type="text"
-						name="username" class="form-control" aria-label="Käyttäjätunnus"
+						style="width: 30%">Käyttäjätunnus</span> <input type="text" class="form-control" aria-label="Käyttäjätunnus"
 						aria-describedby="inputGroup-sizing-default"
-						placeholder="mattimeikalainen" required>
+						placeholder="mattimeikalainen" th:field="*{username}" required>
+					<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Virheellinen käyttäjätunnus</div>
 				</div>
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
-						style="width: 30%">Salasana</span> <input type="password"
-						name="password1" class="form-control" aria-label="Salasana"
+						style="width: 30%">Salasana</span> <input type="password" class="form-control" aria-label="Salasana"
 						aria-describedby="inputGroup-sizing-default"
-						placeholder="salasana" required>
+						placeholder="salasana" th:field="*{password}" required>
+					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Virheellinen salasana</div>
 				</div>
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
 						style="width: 30%">Salasana (uudelleen)</span> <input
-						type="password" name="password" class="form-control"
+						type="password" class="form-control"
 						aria-label="Salasana (uudelleen)"
 						aria-describedby="inputGroup-sizing-default"
-						placeholder="salasana" required>
+						placeholder="salasana" th:field="*{passwordCheck}" required>
+					<div th:if="${#fields.hasErrors('passwordCheck')}" th:errors="*{passwordCheck}">Virheellinen salasana</div>
 				</div>
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
-						style="width: 30%">Etunimi</span> <input type="text"
-						name="etunimi" class="form-control" aria-label="Etunimi"
-						aria-describedby="inputGroup-sizing-default" placeholder="Matti"
+						style="width: 30%">Etunimi</span> <input type="text" class="form-control" aria-label="Etunimi"
+						aria-describedby="inputGroup-sizing-default" placeholder="Matti" th:field="*{etunimi}"
 						required>
 				</div>
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
-						style="width: 30%">Sukunimi</span> <input type="text"
-						name="sukunimi" class="form-control" aria-label="Sukunimi"
+						style="width: 30%">Sukunimi</span> <input type="text" class="form-control" aria-label="Sukunimi"
 						aria-describedby="inputGroup-sizing-default"
-						placeholder="Meikäläinen" required>
+						placeholder="Meikäläinen" th:field="*{sukunimi}" required>
 				</div>
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
-						style="width: 30%">Sähköposti</span> <input type="text"
-						name="email" class="form-control" aria-label="Sähköposti"
+						style="width: 30%">Sähköposti</span> <input type="text" class="form-control" aria-label="Sähköposti"
 						aria-describedby="inputGroup-sizing-default"
-						placeholder="matti.meikalainen@osoite.com" required>
+						placeholder="matti.meikalainen@osoite.com" th:field="*{email}" required>
 				</div>
 				<div class="input-group mb-3 input-group-sm">
 					<span class="input-group-text" id="inputGroup-sizing-sm"
-						style="width: 30%">Puhelinnumero</span> <input type="text"
-						name="phone" class="form-control" aria-label="Puhelinnumero"
+						style="width: 30%">Puhelinnumero</span> <input type="text" class="form-control" aria-label="Puhelinnumero"
 						aria-describedby="inputGroup-sizing-default"
-						placeholder="040 1234 567" required>
+						placeholder="040 1234 567" th:field="*{puhelin}" required>
 				</div>
 				<div class="d-grid gap-2">
 					<input type="submit" class="btn btn-success btn-sm"
@@ -139,5 +164,13 @@ input {
 			</form>
 		</div>
 	</div>
+	<footer>webdesign &copy; Jasmin Lumme</footer>
+	<script>
+		$("#rekisteroidy").click(function() {
+			$('#rekisterointi, #kirjaudu, #kirjaudusisaan').slideToggle();
+			$(this).val()== 'Rekisteröidy' ? $(this).val("Peruuta rekisteröityminen") : $(this).val("Rekisteröidy");
+			
+		});
+	</script>
 </body>
 </html>
