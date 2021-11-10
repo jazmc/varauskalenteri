@@ -36,6 +36,18 @@ public class SignupForm {
     @NotEmpty
     @Size(min=7, max=20)
     private String puhelin = "";
+    
+    @NotEmpty
+    @Size(min=1, max=30)
+    private String koodi = "";
+    
+	public String getKoodi() {
+		return koodi;
+	}
+
+	public void setKoodi(String koodi) {
+		this.koodi = koodi;
+	}
 
 	public String getEtunimi() {
 		return etunimi;

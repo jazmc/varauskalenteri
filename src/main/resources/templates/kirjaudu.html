@@ -86,6 +86,10 @@ footer {color:rgba(200, 85, 61, .3);}
 			Salasanat eivät täsmänneet keskenään. Yritä rekisteröitymistä uudelleen.<br>
 			<br>
 		</div>
+		<div th:if="${param.codeerror}">
+			Rekisteröitymiskoodi oli väärä. Yritä rekisteröitymistä uudelleen.<br>
+			<br>
+		</div>
 		<form th:action="@{/login}" method="post">
 			<div id="kirjaudu">
 				<div class="input-group mb-3">
@@ -156,6 +160,11 @@ footer {color:rgba(200, 85, 61, .3);}
 						style="width: 30%">Puhelinnumero</span> <input type="text" class="form-control" aria-label="Puhelinnumero"
 						aria-describedby="inputGroup-sizing-default"
 						placeholder="040 1234 567" th:field="*{puhelin}" required>
+				</div>
+				<div class="input-group mb-3 input-group-sm">
+					<span class="input-group-text" id="inputGroup-sizing-sm"
+						style="width: 30%">Rekisteröitymiskoodi</span> <input type="text" class="form-control" placeholder="kirjoita tähän 'lentovaraus'" aria-label="Koodi"
+						aria-describedby="inputGroup-sizing-default" th:field="*{koodi}" required>
 				</div>
 				<div class="d-grid gap-2">
 					<input type="submit" class="btn btn-success btn-sm"

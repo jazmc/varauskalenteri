@@ -53,50 +53,49 @@ public class VarausController {
     // rekisteröintilomakkeen postaus
 	@PostMapping("/register")
     public String rekisteroidy(@Valid @ModelAttribute("reklomake") SignupForm signupForm, BindingResult bindingResult) {
-		System.out.println("saatu username: " + signupForm.getUsername());
-		// kentissä ei ole virheitä
-    	if (!bindingResult.hasErrors()) {
-    		System.out.println("Kentistä ei löytynyt virheitä");
-    		// tsekataan että passwordit mätsää
-    		if (signupForm.getPassword().equals(signupForm.getPasswordCheck())) {
-    			System.out.println("Salasanat täsmäsi");
-	    		String salis = signupForm.getPassword();
-		    	BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-		    	String hashPwd = bc.encode(salis);
-		    	
-		    	String uname = signupForm.getUsername();
-		    	String etu = signupForm.getEtunimi();
-		    	String suku = signupForm.getSukunimi();
-		    	String email = signupForm.getEmail();
-		    	String puh = signupForm.getPuhelin();
-		    	String rooli = "USER";
-		    	// luodaan käyttäjäolio ja sille tiedot
-		    	User uusKayttaja = new User(uname, etu, suku, hashPwd, email, puh, rooli);
-		    	
-		    	// jos käyttäjää ei vielä ole olemassa
-		    	if (urep.findByUsername(signupForm.getUsername()) == null) {
-		    		System.out.println("Käyttäjää ei ollut vielä olemassa");
-		    		urep.save(uusKayttaja);
-		    		
-		    	// jos käyttäjä on jo tietokannassa
-		    	} else {
-		    		System.out.println("Käyttäjä oli jo tietokannassa");
-	    			bindingResult.rejectValue("username", "err.username", "Käyttäjänimi on jo käytössä. Valitse toinen.");    	
-	    			return "redirect:/login?userexists";		    		
-		    	}
-		    // jos passwordit ei mätsänny
-    		} else {
-    			System.out.println("Passwordit ei mätsänny");
-    			bindingResult.rejectValue("passwordCheck", "err.passCheck", "Salasanat eivät ole yhtäläiset.");    	
-    			return "redirect:/login?passworderror";
-    		}
-    	// kentissä on virheitä
-    	} else {
-    		System.out.println("Kentissä on virheitä");
-    		System.out.println(bindingResult.getAllErrors());
-    		return "redirect:/login?fielderrors";
-    	}
-    	return "redirect:/login?success";  
+		System.out.println("Funktion avaus");
+		// jos rekisteröitymiskoodi on oikein
+		if(signupForm.getKoodi().equals("lentovaraus")) {
+			// kentissä ei ole virheitä
+	    	if (!bindingResult.hasErrors()) {
+	    		// tsekataan että passwordit mätsää
+	    		if (signupForm.getPassword().equals(signupForm.getPasswordCheck())) {
+		    		String salis = signupForm.getPassword();
+			    	BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+			    	String hashPwd = bc.encode(salis);
+			    	
+			    	String uname = signupForm.getUsername();
+			    	String etu = signupForm.getEtunimi();
+			    	String suku = signupForm.getSukunimi();
+			    	String email = signupForm.getEmail();
+			    	String puh = signupForm.getPuhelin();
+			    	String rooli = "USER";
+			    	// luodaan käyttäjäolio ja sille tiedot
+			    	User uusKayttaja = new User(uname, etu, suku, hashPwd, email, puh, rooli);
+			    	
+			    	// jos käyttäjää ei vielä ole olemassa
+			    	if (urep.findByUsername(signupForm.getUsername()) == null) {
+			    		urep.save(uusKayttaja);
+			    		
+			    	// jos käyttäjä on jo tietokannassa
+			    	} else {
+		    			bindingResult.rejectValue("username", "err.username", "Käyttäjänimi on jo käytössä. Valitse toinen.");    	
+		    			return "redirect:/login?userexists";		    		
+			    	}
+			    // jos passwordit ei mätsänny
+	    		} else {
+	    			bindingResult.rejectValue("passwordCheck", "err.passCheck", "Salasanat eivät ole yhtäläiset.");    	
+	    			return "redirect:/login?passworderror";
+	    		}
+	    	// kentissä on virheitä
+	    	} else {
+	    		System.out.println(bindingResult.getAllErrors());
+	    		return "redirect:/login?fielderrors";
+	    	}
+	    	return "redirect:/login?success";
+		} else {
+	    	return "redirect:/login?codeerror";
+		}
 	}
 
 	// perussivu "varauskalenterisivu"
